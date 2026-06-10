@@ -1,0 +1,8 @@
+-  Efficient Rendering Analysis for Converting 3D to 2D Cartoon Style - https://doi.org/10.62051/hgnpcm53 ^b6a223
+- A visibility algorithm for converting 3D meshes into editable 2D vector graphics - https://doi.org/10.1145/1531326.1531389 ^78b2c4
+- Real-time pencil rendering - https://doi.org/10.1145/1124728.1124735 ^fb8c2a
+- Fine Tone Control in Hardware Hatching - https://hhoppe.com/finetone.pdf ^5d2ace
+- IdiotPencil: An Interactive System for Generating Pencil Drawings from 3D Polygonal Models - https://doi.org/10.1109/CAD/Graphics.2011.50 ^b07861
+- Computer-Generated Graphite Pencil Rendering of 3D Polygonal Models - https://doi.org/10.1111/1467-8659.00340 ^41dd56
+- A Practical Style Transfer Pipeline for 3D Animation: Insights from Production R&D - https://doi.org/10.1145/3681758.3698000 ^93be46
+- 
