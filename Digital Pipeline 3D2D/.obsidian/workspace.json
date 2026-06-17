@@ -8,17 +8,17 @@
         "type": "tabs",
         "children": [
           {
-            "id": "dd490aaeccbf9810",
+            "id": "4b80bb1340f95d2b",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "SOURCES.md",
+                "file": "Visual Analysis/Visual Analysis.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "SOURCES"
+              "title": "Visual Analysis"
             }
           }
         ]
@@ -216,29 +216,32 @@
       "obsidian-full-calendar:Open Full Calendar": false
     }
   },
-  "active": "dd490aaeccbf9810",
+  "active": "4b80bb1340f95d2b",
   "lastOpenFiles": [
-    "Rendering Lines/Method 4 - Computer-Generated Graphite Pencil Rendering.md",
-    "SOURCES.md",
+    "ASSETS/Pasted image 20260617194547.png",
+    "Visual Analysis/Visual Analysis.md",
+    "ASSETS/Pasted image 20260617195033.png",
+    "ASSETS/Pasted image 20260617195008.png",
+    "ASSETS/Pasted image 20260617194946.png",
+    "ASSETS/Pasted image 20260617194915.png",
+    "ASSETS/Pasted image 20260617194849.png",
+    "ASSETS/Pasted image 20260617194836.png",
+    "ASSETS/Pasted image 20260617194749.png",
+    "ASSETS/Pasted image 20260617194729.png",
+    "ASSETS/Pasted image 20260617194713.png",
+    "ASSETS/Pasted image 20260617194630.png",
     "Rendering Shading/Method 2 - Style Transfer Pipeline for 3D Animation.md",
-    "ASSETS/Pasted image 20260610192646.png",
+    "Visual Analysis",
+    "SOURCES.md",
     "Rendering Shading/Method 1 - Solid Colours.md",
-    "Rendering Lines/Method 5 - Stylized Line Drawing of 3D Shapes.md",
-    "Pasted image 20260610191205.png",
     "DOCUMENTATION.md",
-    "ASSETS/Pasted image 20260610190159.png",
-    "ASSETS/Pasted image 20260610190133.png",
+    "Rendering Lines/Method 4 - Computer-Generated Graphite Pencil Rendering.md",
+    "Rendering Lines/Method 5 - Stylized Line Drawing of 3D Shapes.md",
     "Rendering Lines/Method 3 - Generate Pencil Drawings From 3D Polygonal Models.md",
     "Rendering Lines/Method 2 - Real-Time pencil Rendering.md",
     "Rendering Lines/Method 1 - Drawing lines as Vectors.md",
-    "ASSETS/Pasted image 20260610183425.png",
-    "ASSETS/Pasted image 20260610183411.png",
-    "ASSETS/Pasted image 20260610175651.png",
     "2026-06-08.md",
-    "ASSETS/Pasted image 20260608183739.png",
-    "ASSETS/Pasted image 20260608183725.png",
     "ASSETS",
-    "ASSETS/Pasted image 20260608183444.png",
     "Rendering Lines",
     "Rendering Shading",
     "Welcome.md",
