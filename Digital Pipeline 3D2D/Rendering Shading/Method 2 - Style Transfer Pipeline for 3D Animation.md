@@ -1,4 +1,4 @@
-[[SOURCES#^93be46|SOURCE]]
+[[SOURCES#^93be46|SOURCE]] #Methods
 
 1. Input preparation – Take a 3D scene and a single 2D style exemplar (MatCap-like, drawn on a reference sphere) as input. Extract guide images from the 3D scene (e.g., diffuse, normal, outlines, world position).
 2. Separate layer processing – Run style transfer separately for base touch layer, outline layer, and shadows to enable independent control and easier compositing.

@@ -1,48 +1,64 @@
 {
   "recentFiles": [
     {
-      "basename": "Visual Analysis",
-      "path": "Visual Analysis/Visual Analysis.md"
-    },
-    {
-      "basename": "Pasted image 20260617194547",
-      "path": "ASSETS/Pasted image 20260617194547.png"
-    },
-    {
-      "basename": "Method 2 - Style Transfer Pipeline for 3D Animation",
-      "path": "Rendering Shading/Method 2 - Style Transfer Pipeline for 3D Animation.md"
-    },
-    {
-      "basename": "SOURCES",
-      "path": "SOURCES.md"
-    },
-    {
-      "basename": "Method 1 - Solid Colours",
-      "path": "Rendering Shading/Method 1 - Solid Colours.md"
-    },
-    {
-      "basename": "DOCUMENTATION",
-      "path": "DOCUMENTATION.md"
-    },
-    {
-      "basename": "Method 4 - Computer-Generated Graphite Pencil Rendering",
-      "path": "Rendering Lines/Method 4 - Computer-Generated Graphite Pencil Rendering.md"
-    },
-    {
-      "basename": "Pasted image 20260610190159",
-      "path": "ASSETS/Pasted image 20260610190159.png"
+      "basename": "Creating Lines",
+      "path": "Software Design/Creating Lines.md"
     },
     {
       "basename": "Method 3 - Generate Pencil Drawings From 3D Polygonal Models",
       "path": "Rendering Lines/Method 3 - Generate Pencil Drawings From 3D Polygonal Models.md"
     },
     {
-      "basename": "Method 2 - Real-Time pencil Rendering",
-      "path": "Rendering Lines/Method 2 - Real-Time pencil Rendering.md"
+      "basename": "SOURCES",
+      "path": "SOURCES.md"
+    },
+    {
+      "basename": "Creating Solid Colours",
+      "path": "Software Design/Creating Solid Colours.md"
+    },
+    {
+      "basename": "Method 4 - Computer-Generated Graphite Pencil Rendering",
+      "path": "Rendering Lines/Method 4 - Computer-Generated Graphite Pencil Rendering.md"
+    },
+    {
+      "basename": "Pipeline Flow Diagram",
+      "path": "Software Design/Pipeline Flow Diagram.md"
+    },
+    {
+      "basename": "Method 2 - Style Transfer Pipeline for 3D Animation",
+      "path": "Rendering Shading/Method 2 - Style Transfer Pipeline for 3D Animation.md"
+    },
+    {
+      "basename": "Visual Analysis",
+      "path": "Visual Analysis/Visual Analysis.md"
     },
     {
       "basename": "Method 1 - Drawing lines as Vectors",
       "path": "Rendering Lines/Method 1 - Drawing lines as Vectors.md"
+    },
+    {
+      "basename": "Method 2 - Real-Time pencil Rendering",
+      "path": "Rendering Lines/Method 2 - Real-Time pencil Rendering.md"
+    },
+    {
+      "basename": "Method 1 - Solid Colours",
+      "path": "Rendering Shading/Method 1 - Solid Colours.md"
+    },
+    {
+      "basename": "todo",
+      "path": "todo.md"
+    },
+    {
+      "basename": "DOCUMENTATION",
+      "path": "DOCUMENTATION.md"
+    },
+    {
+      "basename": "Pasted image 20260617194547",
+      "path": "ASSETS/Pasted image 20260617194547.png"
+    },
+    {
+      "basename": "Pasted image 20260610190159",
+      "path": "ASSETS/Pasted image 20260610190159.png"
     },
     {
       "basename": "Pasted image 20260610183425",

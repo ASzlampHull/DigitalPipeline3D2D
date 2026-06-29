@@ -1,4 +1,4 @@
-[[SOURCES#^b6a223|SOURCE]]
+[[SOURCES#^b6a223|SOURCE]] #Methods
 
 1. Start the shader by rendering in Diffuse BSDF (Bidirectional Scattering Distribution Function).
 2. Use a method similar to Blender's Shader to RGB & ColorRamp.

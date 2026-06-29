@@ -1,4 +1,4 @@
-[[SOURCES#^78b2c4|SOURCE]]
+[[SOURCES#^78b2c4|SOURCE]] #Methods
 
 1. Enable back-facing culling.
 2. Create a view map from detecting and project all contour/silhouette lines of the mesh into the image plane.

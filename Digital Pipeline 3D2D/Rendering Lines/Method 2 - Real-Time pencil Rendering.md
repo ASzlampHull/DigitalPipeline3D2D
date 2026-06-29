@@ -1,4 +1,4 @@
-[[SOURCES#^fb8c2a|SOURCE]]
+[[SOURCES#^fb8c2a|SOURCE]] #Methods
 
 1. Use the normal and depth maps to find silhouettes and feature edges, then produce a grayscale contour image and modulate contour brightness with lighting.
 2. Simulate the hand-wobble with y= a * sin(bx+c)+r:

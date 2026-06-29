@@ -1,4 +1,4 @@
-[[SOURCES#^41dd56|SOURCE]]
+[[SOURCES#^41dd56|SOURCE]] #Methods
 
 1. Simulated drawing materials – Modeled graphite pencil (hardness, point shape, pressure distribution) and drawing paper (tooth/texture as a height field, lead accumulation).
 2. Defined pencil stroke primitive – Stroke path with character function controlling pressure, point shape, waviness, slanting, and wrist/arm movement.

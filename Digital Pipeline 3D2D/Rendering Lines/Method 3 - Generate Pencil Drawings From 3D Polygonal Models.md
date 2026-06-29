@@ -1,4 +1,4 @@
-[[SOURCES#^b07861|SOURCE]]
+[[SOURCES#^b07861|SOURCE]] #Methods
 
 1. Detect the silhouettes, contours, and boundary edges.
 2. Generate feature lines but remove occluded line segments.
