@@ -1,0 +1,12 @@
+# Blender 4.3.0 MTL File: 'Moon.blend'
+# www.blender.org
+
+newmtl moon
+Ns 69.504128
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/Adam/Documents/UniWork/C++/lab-i-final-lab-ASzlampHull/textures/moon.png

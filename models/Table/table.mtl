@@ -1,0 +1,12 @@
+# Blender 4.3.0 MTL File: '1000PolyTable.blend'
+# www.blender.org
+
+newmtl ehr_coffee_table
+Ns 200.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd -o -4.5 -4.5 0 -s 0.1 0.1 1 C:/Users/Adam/Documents/UniWork/C++/lab-i-final-lab-ASzlampHull/textures/table.png

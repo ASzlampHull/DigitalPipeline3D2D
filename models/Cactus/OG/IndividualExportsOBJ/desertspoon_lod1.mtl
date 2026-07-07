@@ -1,0 +1,20 @@
+# 
+# Wavefront material file
+# Created with Kaydara FBX
+# 
+
+newmtl DarkLeaf_001
+Ka 0.000000 0.000000 0.000000
+Kd 0.005909 0.206686 0.045608
+Ks 0.001477 0.051672 0.011402
+illum 2
+Ns 25.000000
+Tr 1.000000
+
+newmtl SpoonStock_001
+Ka 0.000000 0.000000 0.000000
+Kd 0.292952 0.153860 0.051324
+Ks 0.073238 0.038465 0.012831
+illum 2
+Ns 25.000000
+Tr 1.000000

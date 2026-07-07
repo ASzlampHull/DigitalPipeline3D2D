@@ -1,0 +1,12 @@
+# 
+# Wavefront material file
+# Created with Kaydara FBX
+# 
+
+newmtl Cactus_001
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.448743 0.113607
+Ks 0.000000 0.112186 0.028402
+illum 2
+Ns 25.000000
+Tr 1.000000

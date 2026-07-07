@@ -1,0 +1,28 @@
+# 
+# Wavefront material file
+# Created with Kaydara FBX
+# 
+
+newmtl FlowerPetalYellow
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.647996 0.002383
+Ks 0.200000 0.161999 0.000596
+illum 2
+Ns 25.000000
+Tr 1.000000
+
+newmtl Flower_Middle
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.760748 0.004911
+Ks 0.200000 0.190187 0.001228
+illum 2
+Ns 25.000000
+Tr 1.000000
+
+newmtl FlowerStock
+Ka 0.000000 0.000000 0.000000
+Kd 0.003420 0.292951 0.027779
+Ks 0.000855 0.073238 0.006945
+illum 2
+Ns 25.000000
+Tr 1.000000

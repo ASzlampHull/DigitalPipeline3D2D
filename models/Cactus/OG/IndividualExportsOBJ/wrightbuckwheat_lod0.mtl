@@ -1,0 +1,20 @@
+# 
+# Wavefront material file
+# Created with Kaydara FBX
+# 
+
+newmtl BushOuter
+Ka 0.000000 0.000000 0.000000
+Kd 0.133902 0.916934 0.531833
+Ks 0.033476 0.229234 0.132958
+illum 2
+Ns 25.000000
+Tr 1.000000
+
+newmtl Agave
+Ka 0.000000 0.000000 0.000000
+Kd 0.008343 1.000000 0.772631
+Ks 0.002086 0.250000 0.193158
+illum 2
+Ns 25.000000
+Tr 1.000000
