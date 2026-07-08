@@ -2,7 +2,6 @@
 #include "ResourceManager.h"
 #include "WindowManager.h"
 #include "Camera.h"
-#include "DayNightSeasonal.h"
 #include "VulkanCore.h"
 #include "VulkanSwapChain.h"
 #include "VulkanPipeline.h"
@@ -20,7 +19,6 @@ class Renderer final {
 private:
     ResourceManager resourceManager;
 	IMGUIManager imguiManager;
-    DayNightSeasonal dayNightSeasonal;
 
     VulkanCore vulkanCore;
     VulkanSwapChain vulkanSwapChain;
@@ -63,7 +61,6 @@ public:
         if (this != &other) {
             resourceManager = other.resourceManager;
 			imguiManager = other.imguiManager;
-            dayNightSeasonal = other.dayNightSeasonal;
             vulkanCore = other.vulkanCore;
             vulkanSwapChain = other.vulkanSwapChain;
             vulkanPipeline = other.vulkanPipeline;

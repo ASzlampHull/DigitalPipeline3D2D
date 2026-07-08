@@ -113,7 +113,7 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
     renderPassInfo.renderArea.extent = swapChainVulkan->swapChainExtent;
 
     std::array<VkClearValue, 2> clearValues{};
-    clearValues[0].color = { {0.0f, 0.0f, 0.0f, 1.0f} };
+    clearValues[0].color = { {0.0f, 1.0f, 0.0f, 1.0f} };
     clearValues[1].depthStencil = { 1.0f, 0 };
 
     renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
@@ -166,37 +166,6 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
 
         vertexCount += static_cast<uint32_t>(mesh.GetVertices().size());
     }
-    // Render Fire Particles
-    if (dayNightSeasonal.GetCurrentSeason() == Season::DRY) {
-        const auto* particlePipelineVulkan = &vulkanPipeline.GetParticlesPipelineVulkan();
-        const auto& particles = resourceManager.GetParticles();
-        const auto& indices = particles.GetVertexIndices();
-        const auto& descriptorVulkan = particles.GetDescriptorVulkan();
-        const auto& modelBuffersVulkan = particles.GetModelBuffersVulkan();
-
-        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, particlePipelineVulkan->graphicsPipeline);
-
-        std::array<VkBuffer, 1> vertexBuffers = { modelBuffersVulkan->vertexBuffer.buffer };
-        std::array<VkDeviceSize, 1> offsets = { 0 };
-        vkCmdBindVertexBuffers(commandBuffer, 0, static_cast<uint32_t>(vertexBuffers.size()), vertexBuffers.data(), offsets.data());
-        vkCmdBindIndexBuffer(commandBuffer, modelBuffersVulkan->indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
-
-        const uint32_t indexCount = static_cast<uint32_t>(indices.size());
-
-        vkCmdBindDescriptorSets(
-            commandBuffer,
-            VK_PIPELINE_BIND_POINT_GRAPHICS,
-            pipelineVulkan->pipelineLayout,
-            0, 1,
-            &descriptorVulkan->descriptorSets[currentFrame],
-            0, nullptr
-        );
-
-        particles.UpdatePushConstants(commandBuffer, pipelineVulkan);
-        vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
-
-		vertexCount += static_cast<uint32_t>(indices.size());
-    }
 
 	// Render IMGUI
     if (displayIMGUI)
@@ -214,8 +183,6 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
 
 void Renderer::UpdateUniformBuffer(uint32_t currentImage)
 {
-    const SunLightSettings& sunLightSettings = dayNightSeasonal.GetSunLightSettings();
-
     UniformBufferObject ubo{};
     ubo.model = glm::mat4(1.0f);
 	ubo.eyePos = currentCamera.eyePosition;
@@ -223,10 +190,10 @@ void Renderer::UpdateUniformBuffer(uint32_t currentImage)
     ubo.proj = glm::perspective(glm::radians(45.0f), swapChainVulkan->swapChainExtent.width / static_cast<float>(swapChainVulkan->swapChainExtent.height), 0.1f, 2000.0f);
     ubo.proj[1][1] *= -1;
 	ubo.time = timeAccumulator;
-	
-    ubo.sunDirection = sunLightSettings.direction;
-	ubo.sunLightColor = sunLightSettings.color * sunLightSettings.intensity;
 
+	ubo.sunDirection = glm::vec3(-0.2f, -1.0f, -0.3f);
+    ubo.sunLightColor = glm::vec3(1.0f);
+	
     memcpy(uniformBufferObject.uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }
 
@@ -302,7 +269,6 @@ void Renderer::InitRenderer(const ConfigData& configData, GLFWwindow* window_, c
     window = window_;
 	currentCamera = currentCamera_;
     resourceManager = ResourceManager(configData);
-    dayNightSeasonal = DayNightSeasonal(configData);
     InitVulkan();
 	InitIMGUI();
 }
@@ -318,6 +284,5 @@ void Renderer::Update(const InputManager& input, const CameraSettings& currentCa
 		displayIMGUI = !displayIMGUI;
 	}
 
-	dayNightSeasonal.Update(deltaTime, input, resourceManager.GetModelRef("sun"), resourceManager.GetModelRef("moon"));
     DrawFrame();
 }

@@ -18,16 +18,8 @@ void Model::UpdatePushConstants(VkCommandBuffer commandBuffer, const PipelineVul
 	pushConstants.refractionIndex = material.GetRefractionIndex();
 	pushConstants.transparency = material.GetTransparency();
 
-	// HARD-CODED FOR TIME //TODO: Remove hard-coding
-	if (name.find("ehr_coffee") != std::string::npos)
-		pushConstants.isVertexShaded = true;
-	else
-		pushConstants.isVertexShaded = false;
-
-	if (name.find("ground") != std::string::npos)
-		pushConstants.isBumpHeight = true;
-	else
-		pushConstants.isBumpHeight = false;
+	pushConstants.isVertexShaded = false;
+	pushConstants.isBumpHeight = false;
 
 	vkCmdPushConstants(commandBuffer, 
 		pipelineVulkan->pipelineLayout,
