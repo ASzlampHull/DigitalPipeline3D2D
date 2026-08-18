@@ -1,6 +1,58 @@
 {
   "recentFiles": [
     {
+      "basename": "2026-08-18",
+      "path": "Dev Diary/2026-08-18.md"
+    },
+    {
+      "basename": "2026-08-17",
+      "path": "Dev Diary/2026-08-17.md"
+    },
+    {
+      "basename": "2026-08-09",
+      "path": "Dev Diary/2026-08-09.md"
+    },
+    {
+      "basename": "2026-08-16",
+      "path": "Dev Diary/2026-08-16.md"
+    },
+    {
+      "basename": "2026-08-11",
+      "path": "Dev Diary/2026-08-11.md"
+    },
+    {
+      "basename": "2026-08-10",
+      "path": "Dev Diary/2026-08-10.md"
+    },
+    {
+      "basename": "SOURCES",
+      "path": "SOURCES.md"
+    },
+    {
+      "basename": "Visual Analysis",
+      "path": "Visual Analysis/Visual Analysis.md"
+    },
+    {
+      "basename": "todo",
+      "path": "todo.md"
+    },
+    {
+      "basename": "Method 3 - Generate Pencil Drawings From 3D Polygonal Models",
+      "path": "Rendering Lines/Method 3 - Generate Pencil Drawings From 3D Polygonal Models.md"
+    },
+    {
+      "basename": "Method 4 - Computer-Generated Graphite Pencil Rendering",
+      "path": "Rendering Lines/Method 4 - Computer-Generated Graphite Pencil Rendering.md"
+    },
+    {
+      "basename": "Method 2 - Real-Time pencil Rendering",
+      "path": "Rendering Lines/Method 2 - Real-Time pencil Rendering.md"
+    },
+    {
+      "basename": "Method 1 - Drawing lines as Vectors",
+      "path": "Rendering Lines/Method 1 - Drawing lines as Vectors.md"
+    },
+    {
       "basename": "Creating Lines",
       "path": "Software Design/Creating Lines.md"
     },
@@ -9,48 +61,20 @@
       "path": "Software Design/Creating Solid Colours.md"
     },
     {
-      "basename": "Method 3 - Generate Pencil Drawings From 3D Polygonal Models",
-      "path": "Rendering Lines/Method 3 - Generate Pencil Drawings From 3D Polygonal Models.md"
-    },
-    {
-      "basename": "SOURCES",
-      "path": "SOURCES.md"
-    },
-    {
-      "basename": "Method 4 - Computer-Generated Graphite Pencil Rendering",
-      "path": "Rendering Lines/Method 4 - Computer-Generated Graphite Pencil Rendering.md"
-    },
-    {
       "basename": "Pipeline Flow Diagram",
       "path": "Software Design/Pipeline Flow Diagram.md"
+    },
+    {
+      "basename": "DOCUMENTATION",
+      "path": "DOCUMENTATION.md"
     },
     {
       "basename": "Method 2 - Style Transfer Pipeline for 3D Animation",
       "path": "Rendering Shading/Method 2 - Style Transfer Pipeline for 3D Animation.md"
     },
     {
-      "basename": "Visual Analysis",
-      "path": "Visual Analysis/Visual Analysis.md"
-    },
-    {
-      "basename": "Method 1 - Drawing lines as Vectors",
-      "path": "Rendering Lines/Method 1 - Drawing lines as Vectors.md"
-    },
-    {
-      "basename": "Method 2 - Real-Time pencil Rendering",
-      "path": "Rendering Lines/Method 2 - Real-Time pencil Rendering.md"
-    },
-    {
       "basename": "Method 1 - Solid Colours",
       "path": "Rendering Shading/Method 1 - Solid Colours.md"
-    },
-    {
-      "basename": "todo",
-      "path": "todo.md"
-    },
-    {
-      "basename": "DOCUMENTATION",
-      "path": "DOCUMENTATION.md"
     },
     {
       "basename": "Pasted image 20260617194547",

@@ -49,6 +49,12 @@
     <Filter Include="Source Files\IMGUI">
       <UniqueIdentifier>{3599f39f-649f-4834-902c-4fc33f25cb19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\PipelineTools">
+      <UniqueIdentifier>{3bbb4afa-9dd2-44c5-949b-c14c46f428ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PipelineTools">
+      <UniqueIdentifier>{169d18f9-14f6-40e3-a31d-cd3ba7a87695}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -161,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="Particles.cpp">
       <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="SSBOBuffer.cpp">
+      <Filter>Source Files\PipelineTools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -303,6 +312,9 @@
     </ClInclude>
     <ClInclude Include="Particles.h">
       <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="SSBOBuffer.h">
+      <Filter>Header Files\PipelineTools</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

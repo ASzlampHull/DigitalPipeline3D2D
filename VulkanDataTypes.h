@@ -69,11 +69,18 @@ struct SwapChainVulkan {
 	}
 };
 
+enum class PipelineType {
+	Graphics,
+	Compute,
+	NONE
+};
+
 struct PipelineVulkan {
 	VkRenderPass renderPass = VK_NULL_HANDLE;
 	VkDescriptorSetLayout descriptorSetLayout = VK_NULL_HANDLE;
 	VkPipelineLayout pipelineLayout = VK_NULL_HANDLE;
-	VkPipeline graphicsPipeline = VK_NULL_HANDLE;
+	VkPipeline pipeline = VK_NULL_HANDLE;
+	PipelineType pipelineType = PipelineType::NONE;
 
 	PipelineVulkan() = default;
 	~PipelineVulkan() = default;
@@ -84,7 +91,8 @@ struct PipelineVulkan {
 			this->renderPass = rhs.renderPass;
 			this->descriptorSetLayout = rhs.descriptorSetLayout;
 			this->pipelineLayout = rhs.pipelineLayout;
-			this->graphicsPipeline = rhs.graphicsPipeline;
+			this->pipeline = rhs.pipeline;
+			this->pipelineType = rhs.pipelineType;
 		}
 		return *this;
 	}
@@ -93,6 +101,7 @@ struct PipelineVulkan {
 struct ShaderVulkan {
 	VkShaderModule vertShaderModule = VK_NULL_HANDLE;
 	VkShaderModule fragShaderModule = VK_NULL_HANDLE;
+	VkShaderModule computeShaderModule = VK_NULL_HANDLE;
 
 	ShaderVulkan() = default;
 	~ShaderVulkan() = default;
@@ -102,6 +111,7 @@ struct ShaderVulkan {
 		if (this != &rhs) {
 			this->vertShaderModule = rhs.vertShaderModule;
 			this->fragShaderModule = rhs.fragShaderModule;
+			this->computeShaderModule = rhs.computeShaderModule;
 		}
 		return *this;
 	}
@@ -192,6 +202,7 @@ struct ModelBuffersVulkan {
 
 struct DescriptorVulkan {
 	std::vector<VkDescriptorSet> descriptorSets = {};
+	//VkDescriptorSetLayout descriptorSetLayout = VK_NULL_HANDLE;
 	VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
 
 	DescriptorVulkan() = default;
@@ -201,6 +212,7 @@ struct DescriptorVulkan {
 	{
 		if (this != &rhs) {
 			this->descriptorSets = rhs.descriptorSets;
+			//this->descriptorSetLayout = rhs.descriptorSetLayout;
 			this->descriptorPool = rhs.descriptorPool;
 		}
 		return *this;

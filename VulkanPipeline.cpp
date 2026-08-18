@@ -6,6 +6,8 @@ void VulkanPipeline::InitialisePipeline()
 	CreateDescriptorSetLayout();
 	CreateGraphicsPipeline();
 	CreateParticlesPipeline();
+    CreateComputeDescriptorSetLayout();
+	CreateComputePipeline();
 }
 
 void VulkanPipeline::CreateRenderPass()
@@ -220,12 +222,14 @@ void VulkanPipeline::CreateGraphicsPipeline()
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-    if (vkCreateGraphicsPipelines(coreVulkan->device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &pipelineVulkan.graphicsPipeline) != VK_SUCCESS) {
+    if (vkCreateGraphicsPipelines(coreVulkan->device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &pipelineVulkan.pipeline) != VK_SUCCESS) {
         throw std::runtime_error("failed to create graphics pipeline!");
     }
 
     vkDestroyShaderModule(coreVulkan->device, shaderVulkan.fragShaderModule, nullptr);
     vkDestroyShaderModule(coreVulkan->device, shaderVulkan.vertShaderModule, nullptr);
+
+	pipelineVulkan.pipelineType = PipelineType::Graphics;
 }
 
 void VulkanPipeline::CreateParticlesPipeline()
@@ -329,11 +333,11 @@ void VulkanPipeline::CreateParticlesPipeline()
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 1;
-    pipelineLayoutInfo.pSetLayouts = &pipelineVulkan.descriptorSetLayout;
+    pipelineLayoutInfo.pSetLayouts = &particlesPipelineVulkan.descriptorSetLayout;
     pipelineLayoutInfo.pushConstantRangeCount = 1;
     pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
-	if (vkCreatePipelineLayout(coreVulkan->device, &pipelineLayoutInfo, nullptr, &pipelineVulkan.pipelineLayout) != VK_SUCCESS) { // Uses main pipeline layout to save time.
+	if (vkCreatePipelineLayout(coreVulkan->device, &pipelineLayoutInfo, nullptr, &particlesPipelineVulkan.pipelineLayout) != VK_SUCCESS) { // Uses main pipeline layout to save time.
         throw std::runtime_error("failed to create pipeline layout!");
     }
 
@@ -349,17 +353,78 @@ void VulkanPipeline::CreateParticlesPipeline()
     pipelineInfo.pMultisampleState = &multisampling;
     pipelineInfo.pColorBlendState = &colorBlending;
     pipelineInfo.pDynamicState = &dynamicState;
-    pipelineInfo.layout = pipelineVulkan.pipelineLayout;
-    pipelineInfo.renderPass = pipelineVulkan.renderPass;
+    pipelineInfo.layout = particlesPipelineVulkan.pipelineLayout;
+    pipelineInfo.renderPass = particlesPipelineVulkan.renderPass;
     pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
     pipelineInfo.subpass = 0;
 
-    if (vkCreateGraphicsPipelines(coreVulkan->device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &particlesPipelineVulkan.graphicsPipeline) != VK_SUCCESS) {
+    if (vkCreateGraphicsPipelines(coreVulkan->device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &particlesPipelineVulkan.pipeline) != VK_SUCCESS) {
         throw std::runtime_error("Failed to create graphics pipeline!");
     }
 
     vkDestroyShaderModule(coreVulkan->device, particlesVulkan.fragShaderModule, nullptr);
     vkDestroyShaderModule(coreVulkan->device, particlesVulkan.vertShaderModule, nullptr);
+
+	particlesPipelineVulkan.pipelineType = PipelineType::Graphics;
+}
+
+void VulkanPipeline::CreateComputeDescriptorSetLayout()
+{
+	VkDescriptorSetLayoutBinding computeLayoutBinding{};
+	computeLayoutBinding.binding = 0;
+	computeLayoutBinding.descriptorCount = 1;
+	computeLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+	computeLayoutBinding.pImmutableSamplers = nullptr;
+	computeLayoutBinding.stageFlags = VK_SHADER_STAGE_COMPUTE_BIT;
+
+	std::array<VkDescriptorSetLayoutBinding, 1> bindings = { computeLayoutBinding };
+	VkDescriptorSetLayoutCreateInfo layoutInfo{};
+	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+	layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
+	layoutInfo.pBindings = bindings.data();
+
+	if (vkCreateDescriptorSetLayout(coreVulkan->device, &layoutInfo, nullptr, &computePipelineVulkan.descriptorSetLayout) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create compute descriptor set layout!");
+	}
+}
+
+void VulkanPipeline::CreateComputePipeline()
+{
+	std::vector<char> computeShaderCode;
+
+	ReadFile("shaders/shader.comp.spv", computeShaderCode);
+
+	computeVulkan.computeShaderModule = CreateShaderModule(computeShaderCode);
+
+	VkPipelineShaderStageCreateInfo computeShaderStageInfo{};
+	computeShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	computeShaderStageInfo.stage = VK_SHADER_STAGE_COMPUTE_BIT;
+	computeShaderStageInfo.module = computeVulkan.computeShaderModule;
+	computeShaderStageInfo.pName = "main";
+
+	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+	pipelineLayoutInfo.setLayoutCount = 1;
+	pipelineLayoutInfo.pSetLayouts = &computePipelineVulkan.descriptorSetLayout;
+    // MIGHT NEED PUSH CONSTANTS TODO
+
+	if (vkCreatePipelineLayout(coreVulkan->device, &pipelineLayoutInfo, nullptr, &computePipelineVulkan.pipelineLayout) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create compute pipeline layout!");
+	}
+
+	VkComputePipelineCreateInfo pipelineInfo{};
+	pipelineInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
+	pipelineInfo.stage = computeShaderStageInfo;
+	pipelineInfo.layout = computePipelineVulkan.pipelineLayout;
+	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+
+	if (vkCreateComputePipelines(coreVulkan->device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &computePipelineVulkan.pipeline) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create compute pipeline!");
+	}
+
+	vkDestroyShaderModule(coreVulkan->device, computeVulkan.computeShaderModule, nullptr);
+
+    computePipelineVulkan.pipelineType = PipelineType::Compute;
 }
 
 const void VulkanPipeline::ReadFile(const std::string& filename, std::vector<char>& buffer_) const
@@ -398,7 +463,15 @@ const VkShaderModule VulkanPipeline::CreateShaderModule(const std::vector<char>&
 
 const void VulkanPipeline::Cleanup() const
 {
-    vkDestroyPipeline(coreVulkan->device, pipelineVulkan.graphicsPipeline, nullptr);
+    vkDestroyPipeline(coreVulkan->device, pipelineVulkan.pipeline, nullptr);
     vkDestroyPipelineLayout(coreVulkan->device, pipelineVulkan.pipelineLayout, nullptr);
     vkDestroyRenderPass(coreVulkan->device, pipelineVulkan.renderPass, nullptr);
+
+	vkDestroyPipeline(coreVulkan->device, particlesPipelineVulkan.pipeline, nullptr);
+	vkDestroyPipelineLayout(coreVulkan->device, particlesPipelineVulkan.pipelineLayout, nullptr);
+	vkDestroyRenderPass(coreVulkan->device, particlesPipelineVulkan.renderPass, nullptr);
+
+	vkDestroyPipeline(coreVulkan->device, computePipelineVulkan.pipeline, nullptr);
+	vkDestroyPipelineLayout(coreVulkan->device, computePipelineVulkan.pipelineLayout, nullptr);
+	vkDestroyRenderPass(coreVulkan->device, computePipelineVulkan.renderPass, nullptr);
 }

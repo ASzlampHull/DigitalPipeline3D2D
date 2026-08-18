@@ -159,6 +159,7 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="SSBOBuffer.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="VulkanBuffers.cpp" />
     <ClCompile Include="VulkanCommandBuffers.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="Particles.h" />
+    <ClInclude Include="SSBOBuffer.h" />
     <ClInclude Include="VulkanBuffers.h" />
     <ClInclude Include="VulkanCommandBuffers.h" />
     <ClInclude Include="VulkanCore.h" />

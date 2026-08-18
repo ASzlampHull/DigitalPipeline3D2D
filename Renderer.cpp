@@ -8,12 +8,16 @@ void Renderer::InitVulkan()
 	swapChainVulkan = &vulkanSwapChain.GetSwapChainVulkan();
 	vulkanPipeline = VulkanPipeline(coreVulkan, swapChainVulkan);
 	pipelineVulkan = &vulkanPipeline.GetPipelineVulkan();
+	computePipelineVulkan = &vulkanPipeline.GetComputePipelineVulkan();
 	vulkanFramebuffers = VulkanFramebuffers(coreVulkan, const_cast<SwapChainVulkan*>(&vulkanSwapChain.GetSwapChainVulkan()), pipelineVulkan);
 	commandPoolVulkan = &vulkanFramebuffers.GetCommandPoolVulkan();
 	
 	resourceManager.CreateVertexIndexBuffers(coreVulkan, commandPoolVulkan);
     CreateUniformBuffers();
     resourceManager.CreateTextures(coreVulkan, commandPoolVulkan, pipelineVulkan, uniformBufferObject);
+
+	//Compute pipeline resources
+	ssboBuffer = SSBOBuffer(coreVulkan, computePipelineVulkan);
 
 	vulkanCommandBuffers = VulkanCommandBuffers(coreVulkan, commandPoolVulkan);
 	commandBuffersVulkan = &vulkanCommandBuffers.GetCommandBuffersVulkan();
@@ -83,6 +87,7 @@ void Renderer::Cleanup()
         vkDestroyBuffer(coreVulkan->device, uniformBufferObject.uniformBuffers[i], nullptr);
         vkFreeMemory(coreVulkan->device, uniformBufferObject.uniformBuffersMemory[i], nullptr);
     }
+	ssboBuffer.CleanUp();
 	resourceManager.CleanupTextures(coreVulkan);
     vulkanPipeline.CleanupDescriptorSetLayout();
     resourceManager.CleanupBuffersVI();
@@ -105,6 +110,7 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
 
 
 #pragma region Main Render Pass
+
     VkRenderPassBeginInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.renderPass = pipelineVulkan->renderPass;
@@ -121,7 +127,7 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
 
     vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-    vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineVulkan->graphicsPipeline);
+    vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineVulkan->pipeline);
 
     VkViewport viewport{};
     viewport.x = 0.0f;
@@ -172,6 +178,42 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
         imguiManager.DisplayIMGUI(currentFrame, deltaTime, vertexCount);
 
     vkCmdEndRenderPass(commandBuffer);
+
+#pragma endregion
+
+#pragma region Compute Pass
+
+    vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, computePipelineVulkan->pipeline);
+    vkCmdBindDescriptorSets(
+        commandBuffer,
+        VK_PIPELINE_BIND_POINT_COMPUTE,
+        computePipelineVulkan->pipelineLayout,
+		0, 1, ssboBuffer.GetDescriptorVulkan().descriptorSets.data() + currentFrame,
+        0, nullptr
+    );
+
+    // Optionally push constants if used
+    // vkCmdPushConstants(commandBuffer, computePipelineVulkan.pipelineLayout, VK_SHADER_STAGE_COMPUTE_BIT, 0, sizeof(...), &yourData);
+
+    vkCmdDispatch(commandBuffer, ssboBuffer.GetNumElements(), 1, 1);
+
+    VkBufferMemoryBarrier barrier{};
+    barrier.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+    barrier.srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+    barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT | VK_ACCESS_SHADER_READ_BIT;
+    barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    barrier.buffer = ssboBuffer.GetSSBOBuffer();
+    barrier.offset = 0;
+    barrier.size = VK_WHOLE_SIZE;
+
+    vkCmdPipelineBarrier(commandBuffer,
+        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+        VK_PIPELINE_STAGE_TRANSFER_BIT | VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, //VK_PIPELINE_STAGE_HOST_BIT,//
+        0,
+        0, nullptr,
+        1, &barrier,
+        0, nullptr);
 
 #pragma endregion
 
@@ -262,6 +304,8 @@ void Renderer::DrawFrame()
     }
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+
+	ssboBuffer.DEBUG_PrintSSBOBufferInfo();
 }
 
 void Renderer::InitRenderer(const ConfigData& configData, GLFWwindow* window_, const CameraSettings& currentCamera_)

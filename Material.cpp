@@ -21,12 +21,6 @@ void Material::CreateTexture(const CoreVulkan* coreVulkan_, const CommandPoolVul
 
 void Material::CreateDescriptor(const CoreVulkan* coreVulkan_, const ModelBuffersVulkan* modelBuffersVulkan_, const PipelineVulkan* pipelineVulkan_, const UniformVulkan& uniformBufferObject)
 {
-	//TODO: Handle multiple texture types in descriptor 1 
-	//binding 0->uniform buffer(material params / transform)
-	//binding 1->diffuse(albedo) sampler
-	//binding 2->normal map sampler
-	//binding 3->bump / height map sampler
-
 	vulkanDescriptor = VulkanDescriptor(coreVulkan_, modelBuffersVulkan_, pipelineVulkan_, textures.at("diffuse").GetTextureVulkan(), uniformBufferObject);
 	descriptorVulkan = &vulkanDescriptor.GetDescriptorVulkan();
 }

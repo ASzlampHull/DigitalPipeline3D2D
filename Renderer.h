@@ -9,6 +9,7 @@
 #include "VulkanBuffers.h"
 #include "VulkanCommandBuffers.h"
 #include "VulkanFrameSync.h"
+#include "SSBOBuffer.h"
 #include "IMGUIManager.h"
 #include <chrono>
 #include <array>
@@ -34,11 +35,15 @@ private:
     const CoreVulkan* coreVulkan;
     const SwapChainVulkan* swapChainVulkan;
     const PipelineVulkan* pipelineVulkan;
+	const PipelineVulkan* computePipelineVulkan;
     const CommandPoolVulkan* commandPoolVulkan;
     const CommandBuffersVulkan* commandBuffersVulkan;
     const FrameSyncVulkan* frameSyncVulkan;
     bool* framebufferResized;
 	bool displayIMGUI = true;
+
+	// Compute resources
+	SSBOBuffer ssboBuffer;
 
     uint32_t currentFrame = 0;
     float deltaTime = 0.0f;
@@ -73,6 +78,7 @@ public:
             coreVulkan = other.coreVulkan;
             swapChainVulkan = other.swapChainVulkan;
             pipelineVulkan = other.pipelineVulkan;
+			computePipelineVulkan = other.computePipelineVulkan;
             commandPoolVulkan = other.commandPoolVulkan;
             commandBuffersVulkan = other.commandBuffersVulkan;
             frameSyncVulkan = other.frameSyncVulkan;
@@ -81,6 +87,7 @@ public:
             currentFrame = other.currentFrame;
             deltaTime = other.deltaTime;
             timeAccumulator = other.timeAccumulator;
+			ssboBuffer = other.ssboBuffer;
         }
         return *this;
     }
