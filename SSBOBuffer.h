@@ -21,7 +21,6 @@ private:
 
 	void CreateSSBOBuffer();
 	void CreateDescriptorPool();
-	//void CreateDescriptorSetLayout();
 	void CreateDescriptorSet();
 
 public:
@@ -33,7 +32,6 @@ public:
 	{
 		CreateSSBOBuffer();
 		CreateDescriptorPool();
-		//CreateDescriptorSetLayout();
 		CreateDescriptorSet();
 	}
 	SSBOBuffer(const SSBOBuffer& other) = default;

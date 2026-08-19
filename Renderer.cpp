@@ -304,8 +304,6 @@ void Renderer::DrawFrame()
     }
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
-
-	ssboBuffer.DEBUG_PrintSSBOBufferInfo();
 }
 
 void Renderer::InitRenderer(const ConfigData& configData, GLFWwindow* window_, const CameraSettings& currentCamera_)

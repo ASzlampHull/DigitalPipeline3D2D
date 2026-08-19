@@ -202,7 +202,6 @@ struct ModelBuffersVulkan {
 
 struct DescriptorVulkan {
 	std::vector<VkDescriptorSet> descriptorSets = {};
-	//VkDescriptorSetLayout descriptorSetLayout = VK_NULL_HANDLE;
 	VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
 
 	DescriptorVulkan() = default;
@@ -212,7 +211,6 @@ struct DescriptorVulkan {
 	{
 		if (this != &rhs) {
 			this->descriptorSets = rhs.descriptorSets;
-			//this->descriptorSetLayout = rhs.descriptorSetLayout;
 			this->descriptorPool = rhs.descriptorPool;
 		}
 		return *this;
