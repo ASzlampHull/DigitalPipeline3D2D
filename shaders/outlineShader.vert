@@ -40,12 +40,36 @@ layout(location = 6) out vec3 fragPos_tangent;
 
 float outlineWidth = 0.05f;
 
-void main() {
-    vec3 expandedPosition = inPosition + inNormal * outlineWidth;
-
-    gl_Position = ubo.proj * ubo.view * pushConstants.model * vec4(expandedPosition, 1.0);
+void ExtrudeByNormal()
+{
+    vec3 worldPos = (pushConstants.model * vec4(inPosition, 1.0)).xyz;
+    vec3 worldNormal = normalize(mat3(pushConstants.model) * inNormal);
+    vec3 expandedWorldPos = worldPos + worldNormal * outlineWidth;
+    gl_Position = ubo.proj * ubo.view * vec4(expandedWorldPos, 1.0);
+    
     fragTexCoord = inTexCoord;
-    fragWorldPos = (ubo.model * vec4(expandedPosition, 1.0)).xyz;
-    fragWorldNormal = normalize(mat3(transpose(inverse(ubo.model))) * inNormal);
+    fragWorldPos = expandedWorldPos;
+    fragWorldNormal = worldNormal;
+    fragColor = inColor;
+}
+
+void main() {
+    //ExtrudeByNormal();
+
+    mat4 scaleMatrix = mat4(
+    vec4(1.0 + outlineWidth, 0.0, 0.0, 0.0),
+    vec4(0.0, 1.0 + outlineWidth, 0.0, 0.0),
+    vec4(0.0, 0.0, 1.0 + outlineWidth, 0.0),
+    vec4(0.0, 0.0, 0.0, 1.0)
+    );
+    
+    mat4 outlineMatrix = pushConstants.model * scaleMatrix;
+    vec4 worldPosition = outlineMatrix * vec4(inPosition, 1.0);
+    vec3 worldNormal = normalize(mat3(pushConstants.model) * inNormal);
+        
+    gl_Position = ubo.proj * ubo.view * worldPosition;
+    fragTexCoord = inTexCoord;
+    fragWorldPos = worldPosition.xyz;
+    fragWorldNormal = worldNormal;
     fragColor = inColor;
 }
