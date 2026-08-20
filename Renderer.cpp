@@ -9,6 +9,7 @@ void Renderer::InitVulkan()
 	vulkanPipeline = VulkanPipeline(coreVulkan, swapChainVulkan);
 	pipelineVulkan = &vulkanPipeline.GetPipelineVulkan();
 	computePipelineVulkan = &vulkanPipeline.GetComputePipelineVulkan();
+	outlinePipelineVulkan = &vulkanPipeline.GetOutlinePipelineVulkan();
 	vulkanFramebuffers = VulkanFramebuffers(coreVulkan, const_cast<SwapChainVulkan*>(&vulkanSwapChain.GetSwapChainVulkan()), pipelineVulkan);
 	commandPoolVulkan = &vulkanFramebuffers.GetCommandPoolVulkan();
 	
@@ -127,8 +128,6 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
 
     vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-    vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineVulkan->pipeline);
-
     VkViewport viewport{};
     viewport.x = 0.0f;
     viewport.y = 0.0f;
@@ -142,6 +141,41 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
     scissor.offset = { 0, 0 };
     scissor.extent = swapChainVulkan->swapChainExtent;
     vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+
+#pragma region OutlinePass
+
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, outlinePipelineVulkan->pipeline);
+	for (const auto& pair : resourceManager.GetModels()) {
+		const auto& model = pair.second;
+		const auto& mesh = model.GetMesh();
+		const auto& descriptorVulkan = model.GetMaterial().GetDescriptorVulkan();
+		const auto& modelBuffersVulkan = model.GetModelBuffersVulkan();
+		std::array<VkBuffer, 1> vertexBuffers = { modelBuffersVulkan->vertexBuffer.buffer };
+		std::array<VkDeviceSize, 1> offsets = { 0 };
+
+		vkCmdBindVertexBuffers(commandBuffer, 0, static_cast<uint32_t>(vertexBuffers.size()), vertexBuffers.data(), offsets.data());
+		vkCmdBindIndexBuffer(commandBuffer, modelBuffersVulkan->indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
+
+		const uint32_t indexCount = static_cast<uint32_t>(mesh.GetVertexIndices().size());
+
+		vkCmdBindDescriptorSets(
+			commandBuffer,
+			VK_PIPELINE_BIND_POINT_GRAPHICS,
+			outlinePipelineVulkan->pipelineLayout,
+			0, 1,
+			&descriptorVulkan->descriptorSets[currentFrame],
+			0, nullptr
+		);
+
+		model.UpdatePushConstants(commandBuffer, outlinePipelineVulkan);
+		vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
+	}
+
+#pragma endregion
+
+#pragma region NormalPass
+
+    vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineVulkan->pipeline);
 
 	uint32_t vertexCount = 0;
 
@@ -173,6 +207,8 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
         vertexCount += static_cast<uint32_t>(mesh.GetVertices().size());
     }
 
+#pragma endregion
+
 	// Render IMGUI
     if (displayIMGUI)
         imguiManager.DisplayIMGUI(currentFrame, deltaTime, vertexCount);
@@ -183,12 +219,23 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
 
 #pragma region Compute Pass
 
+    //ComputePass(commandBuffer);
+
+#pragma endregion
+
+    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
+        throw std::runtime_error("failed to record command buffer!");
+    }
+}
+
+void Renderer::ComputePass(VkCommandBuffer commandBuffer)
+{
     vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, computePipelineVulkan->pipeline);
     vkCmdBindDescriptorSets(
         commandBuffer,
         VK_PIPELINE_BIND_POINT_COMPUTE,
         computePipelineVulkan->pipelineLayout,
-		0, 1, ssboBuffer.GetDescriptorVulkan().descriptorSets.data() + currentFrame,
+        0, 1, ssboBuffer.GetDescriptorVulkan().descriptorSets.data() + currentFrame,
         0, nullptr
     );
 
@@ -214,12 +261,6 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
         0, nullptr,
         1, &barrier,
         0, nullptr);
-
-#pragma endregion
-
-    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
-        throw std::runtime_error("failed to record command buffer!");
-    }
 }
 
 

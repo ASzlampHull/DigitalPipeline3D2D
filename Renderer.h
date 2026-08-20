@@ -36,6 +36,7 @@ private:
     const SwapChainVulkan* swapChainVulkan;
     const PipelineVulkan* pipelineVulkan;
 	const PipelineVulkan* computePipelineVulkan;
+	const PipelineVulkan* outlinePipelineVulkan;
     const CommandPoolVulkan* commandPoolVulkan;
     const CommandBuffersVulkan* commandBuffersVulkan;
     const FrameSyncVulkan* frameSyncVulkan;
@@ -55,6 +56,7 @@ private:
 	void RecreateSwapChain();
 	void CleanupSwapChain();
 	void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+    void ComputePass(VkCommandBuffer commandBuffer);
 	void UpdateUniformBuffer(uint32_t currentImage);
 	void DrawFrame();
 public:
@@ -79,6 +81,7 @@ public:
             swapChainVulkan = other.swapChainVulkan;
             pipelineVulkan = other.pipelineVulkan;
 			computePipelineVulkan = other.computePipelineVulkan;
+			outlinePipelineVulkan = other.outlinePipelineVulkan;
             commandPoolVulkan = other.commandPoolVulkan;
             commandBuffersVulkan = other.commandBuffersVulkan;
             frameSyncVulkan = other.frameSyncVulkan;

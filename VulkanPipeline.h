@@ -11,6 +11,7 @@ private:
 	PipelineVulkan pipelineVulkan = {};
 	PipelineVulkan particlesPipelineVulkan = {};
 	PipelineVulkan computePipelineVulkan = {};
+	PipelineVulkan outlinePipelineVulkan = {};
 	ShaderVulkan shaderVulkan = {};
 	ShaderVulkan particlesVulkan = {};
 	ShaderVulkan computeVulkan = {};
@@ -24,6 +25,7 @@ private:
 	void CreateParticlesPipeline();
 	void CreateComputeDescriptorSetLayout();
 	void CreateComputePipeline();
+	void CreateOutlinePipeline();
 
 	const void ReadFile(const std::string& filename, std::vector<char>& buffer_) const;
 	const VkShaderModule CreateShaderModule(const std::vector<char>& code) const;
@@ -50,6 +52,7 @@ public:
 			this->shaderVulkan = rhs.shaderVulkan;
 			this->particlesVulkan = rhs.particlesVulkan;
 			this->computeVulkan = rhs.computeVulkan;
+			this->outlinePipelineVulkan = rhs.outlinePipelineVulkan;
 		}
 		return *this;
 	}
@@ -57,6 +60,7 @@ public:
 	const PipelineVulkan& GetPipelineVulkan() const { return pipelineVulkan; };
 	const PipelineVulkan& GetParticlesPipelineVulkan() const { return particlesPipelineVulkan; };
 	const PipelineVulkan& GetComputePipelineVulkan() const { return computePipelineVulkan; };
+	const PipelineVulkan& GetOutlinePipelineVulkan() const { return outlinePipelineVulkan; };
 
 	const void Cleanup() const;
 	const void CleanupDescriptorSetLayout() const { vkDestroyDescriptorSetLayout(coreVulkan->device, pipelineVulkan.descriptorSetLayout, nullptr); };

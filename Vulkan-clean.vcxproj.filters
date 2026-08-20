@@ -188,6 +188,12 @@
     <CustomBuild Include="shaders\particleFrag.frag">
       <Filter>Shaders</Filter>
     </CustomBuild>
+    <CustomBuild Include="shaders\outlineShader.vert">
+      <Filter>Shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="shaders\outlineShader.frag">
+      <Filter>Shaders</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
