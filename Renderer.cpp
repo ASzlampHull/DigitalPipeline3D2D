@@ -274,7 +274,16 @@ void Renderer::UpdateUniformBuffer(uint32_t currentImage)
     ubo.proj[1][1] *= -1;
 	ubo.time = timeAccumulator;
 
-	ubo.sunDirection = glm::vec3(-0.2f, -1.0f, -0.3f);
+    // Spin sunDirection around the Y axis in a circle
+    float sunAngle = timeAccumulator * 0.5f; // 0.5f = speed, adjust as needed
+    float radius = 1.0f; // Length of the direction vector
+
+    ubo.sunDirection = glm::normalize(glm::vec3(
+        radius * std::sin(sunAngle), // X
+        -1.0f,                       // Y (keep sun above/below scene)
+        radius * std::cos(sunAngle)  // Z
+    ));
+
     ubo.sunLightColor = glm::vec3(1.0f);
 	
     memcpy(uniformBufferObject.uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));

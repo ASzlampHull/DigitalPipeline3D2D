@@ -64,13 +64,10 @@ vec3 PerPixelShading()
 
     //Bump mapping to perturb normals
     vec3 norm = vec3(0.0);
-    if (pushConstants.isBumpHeight)
-        norm = BumpNormalFromDiffuse(texSampler, fragTexCoord, fragWorldNormal, 8.0);
-    else
-        norm = normalize(fragWorldNormal);
+    norm = normalize(fragWorldNormal);
 
     //Diffuse shading
-    vec3 lightDir = normalize(ubo.lightDir - fragWorldPos);
+    vec3 lightDir = normalize(ubo.lightDir);
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = diff * lightColor;
     vec3 diffMaterial = pushConstants.diffuseMat;
@@ -95,24 +92,107 @@ vec3 PerPixelShading()
     return litColor;
 }
 
-void main() {        
+// Default texture method that uses per-pixel shading and applies opacity
+void DefaultTextureMethod()
+{
     float opacity = pushConstants.opacity;
-    if (pushConstants.isVertexShaded) 
-    {
-        outColor = vec4(fragColor * texture(texSampler, fragTexCoord).rgb, opacity);
+    vec3 litColor = PerPixelShading();
+    outColor = vec4(litColor, opacity);
+}
+
+
+void TwoBandCelShading()
+{
+
+    // Colour Banding
+    vec3 lightBandColour = vec3(1.0, 1.0, 1.0);
+    vec3 shadowColour = vec3(0.1, 0.1, 0.1);
+    vec3 baseColour = pushConstants.ambientMat;
+
+    vec3 normal = normalize(fragWorldNormal);
+    vec3 lightDir = normalize(ubo.lightDir);
+    float NdotL = max(dot(normal, lightDir), 0.0);
+    // Light factor for banding effect    
+    float lightFactor = step(0.5, NdotL);
+
+    // Choose between light and shadow colours
+    vec3 finalColour = mix(shadowColour, lightBandColour, lightFactor);
+    finalColour *= baseColour;
+    
+    outColor = vec4(finalColour, 1.0);
+}
+
+void ThreeBandCelShading()
+{
+    vec3 normal = normalize(fragWorldNormal);
+    vec3 lightDir = normalize(ubo.lightDir);
+    float NdotL = max(dot(normal, lightDir), 0.0);
+    // Light factor for banding effect    
+    float lightFactor = step(0.5, NdotL);
+    // Three bands: 0.0-0.33, 0.33-0.66, 0.66-1.0
+    float band1 = step(0.33, NdotL);  // 1 if >= 0.33
+    float band2 = step(0.66, NdotL);  // 1 if >= 0.66
+
+    // Select colour based on bands
+    vec3 colour;
+    if (band2 > 0.5) {
+        colour = vec3(1.0, 0.9, 0.7); // Bright
+    } else if (band1 > 0.5) {
+        colour = vec3(0.6, 0.5, 0.3); // Mid
+    } else {
+        colour = vec3(0.2, 0.15, 0.1); // Shadow
     }
-    else
-    {
-        if (pushConstants.isBumpHeight)
-        {            
-            float height = dot(texture(texSampler, fragTexCoord).rgb, vec3(0.5, 0.5, 0.5));
-            vec3 litColor = PerPixelShading();
-            outColor = vec4(litColor * height, opacity);
-        }
-        else
-        {
-            vec3 litColor = PerPixelShading();
-            outColor = vec4(litColor, opacity);
-        }
-    }
+    
+    outColor = vec4(colour, 1.0);
+}
+
+void LerpCelShading()
+{
+    // Colour Banding
+    vec3 shadowColour = vec3(0.1, 0.1, 0.1);
+    vec3 lightBandColour = vec3(1.0, 1.0, 1.0);
+    vec3 baseColour = pushConstants.ambientMat;
+
+    vec3 normal = normalize(fragWorldNormal);
+    vec3 lightDir = normalize(ubo.lightDir);
+    float NdotL = max(dot(normal, lightDir), 0.0);
+    // Lerp between shadow and light colours based on NdotL
+    float lerpStep = step(0.5, NdotL);
+    float lerp = mix(0.0, 1.0, lerpStep); // Smooth transition
+
+    vec3 finalColour = mix(shadowColour, lightBandColour, lerp);
+    finalColour *= baseColour;
+    outColor = vec4(finalColour, 1.0);
+}
+
+void FourBandCelShading()
+{
+    // Define 4 colours for the bands
+    vec3 deepShadow = vec3(0.1, 0.05, 0.05);
+    vec3 shadow = vec3(0.3, 0.2, 0.15);
+    vec3 mid = vec3(0.7, 0.5, 0.3);
+    vec3 highlight = vec3(1.0, 0.9, 0.7);
+    
+    vec3 normal = normalize(fragWorldNormal);
+    vec3 lightDir = normalize(ubo.lightDir);
+    float NdotL = max(dot(normal, lightDir), 0.0);
+
+    // Calculate band index
+    float band = step(0.25, NdotL) + step(0.5, NdotL) + step(0.75, NdotL);
+
+    vec3 finalColour = mix(
+        mix(mix(deepShadow, shadow, step(1.5, band)), 
+            mid, step(2.5, band)), 
+        highlight, step(3.5, band)
+    );
+
+    outColor = vec4(finalColour, 1.0);
+}
+
+void main() {           
+    //DefaultTextureMethod();
+    //TwoBandCelShading();
+    //ThreeBandCelShading();    
+    //LerpCelShading();
+    FourBandCelShading();
 }

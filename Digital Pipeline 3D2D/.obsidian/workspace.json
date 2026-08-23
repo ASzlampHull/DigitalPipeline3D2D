@@ -27,16 +27,30 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "2026-08-20.md",
+                "file": "Rendering Shading/Method 1 - Solid Colours.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2026-08-20"
+              "title": "Method 1 - Solid Colours"
+            }
+          },
+          {
+            "id": "05170b1c07da0994",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Rendering Shading/Method 1 - Solid Colours.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Method 1 - Solid Colours"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -232,17 +246,21 @@
       "obsidian-full-calendar:Open Full Calendar": false
     }
   },
-  "active": "5620160162b65aa2",
+  "active": "05170b1c07da0994",
   "lastOpenFiles": [
+    "Rendering Shading/Method 2 - Style Transfer Pipeline for 3D Animation.md",
+    "2026-08-23.md",
+    "SOURCES.md",
+    "Rendering Shading/Method 1 - Solid Colours.md",
+    "Dev Diary/2026-08-20.md",
     "Dev Diary/2026-08-09.md",
-    "2026-08-20.md",
+    "2026-08-22.md",
     "Dev Diary/2026-08-19.md",
     "Dev Diary/2026-08-10.md",
     "Dev Diary/2026-08-18.md",
     "Dev Diary/2026-08-17.md",
     "Dev Diary/2026-08-16.md",
     "Dev Diary/2026-08-11.md",
-    "SOURCES.md",
     "Visual Analysis/Visual Analysis.md",
     "todo.md",
     "Rendering Lines/Method 3 - Generate Pencil Drawings From 3D Polygonal Models.md",
@@ -254,8 +272,6 @@
     "Software Design/Creating Solid Colours.md",
     "Software Design/Pipeline Flow Diagram.md",
     "DOCUMENTATION.md",
-    "Rendering Shading/Method 2 - Style Transfer Pipeline for 3D Animation.md",
-    "Rendering Shading/Method 1 - Solid Colours.md",
     "Software Design",
     "ASSETS/Pasted image 20260617194547.png",
     "ASSETS/Pasted image 20260617195033.png",
@@ -273,8 +289,6 @@
     "ASSETS",
     "Rendering Lines",
     "Rendering Shading",
-    "Welcome.md",
-    "Untitled Kanban.md",
-    "2026-06-03.md"
+    "Welcome.md"
   ]
 }
