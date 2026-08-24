@@ -192,7 +192,7 @@ void FourBandCelShading()
 void main() {           
     //DefaultTextureMethod();
     //TwoBandCelShading();
-    //ThreeBandCelShading();    
+    ThreeBandCelShading();    
     //LerpCelShading();
-    FourBandCelShading();
+    //FourBandCelShading();
 }

@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Rendering Shading/Method 1 - Solid Colours.md",
+                "file": "2026-08-24.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Method 1 - Solid Colours"
+              "title": "2026-08-24"
             }
           }
         ],
@@ -248,10 +248,11 @@
   },
   "active": "05170b1c07da0994",
   "lastOpenFiles": [
-    "Rendering Shading/Method 2 - Style Transfer Pipeline for 3D Animation.md",
-    "2026-08-23.md",
-    "SOURCES.md",
+    "Dev Diary/2026-08-23.md",
+    "2026-08-24.md",
     "Rendering Shading/Method 1 - Solid Colours.md",
+    "Rendering Shading/Method 2 - Style Transfer Pipeline for 3D Animation.md",
+    "SOURCES.md",
     "Dev Diary/2026-08-20.md",
     "Dev Diary/2026-08-09.md",
     "2026-08-22.md",
@@ -288,7 +289,6 @@
     "2026-06-08.md",
     "ASSETS",
     "Rendering Lines",
-    "Rendering Shading",
-    "Welcome.md"
+    "Rendering Shading"
   ]
 }

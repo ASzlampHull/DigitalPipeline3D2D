@@ -53,9 +53,8 @@ void ExtrudeByNormal()
     fragColor = inColor;
 }
 
-void main() {
-    //ExtrudeByNormal();
-
+void ExtrudeByScale()
+{
     mat4 scaleMatrix = mat4(
     vec4(1.0 + outlineWidth, 0.0, 0.0, 0.0),
     vec4(0.0, 1.0 + outlineWidth, 0.0, 0.0),
@@ -72,4 +71,9 @@ void main() {
     fragWorldPos = worldPosition.xyz;
     fragWorldNormal = worldNormal;
     fragColor = inColor;
+}
+
+void main() {
+    //ExtrudeByNormal();
+    ExtrudeByScale();
 }

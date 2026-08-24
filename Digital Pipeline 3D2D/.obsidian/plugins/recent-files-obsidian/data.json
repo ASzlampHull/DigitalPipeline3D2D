@@ -1,16 +1,20 @@
 {
   "recentFiles": [
     {
+      "basename": "2026-08-24",
+      "path": "2026-08-24.md"
+    },
+    {
+      "basename": "2026-08-23",
+      "path": "Dev Diary/2026-08-23.md"
+    },
+    {
       "basename": "Method 1 - Solid Colours",
       "path": "Rendering Shading/Method 1 - Solid Colours.md"
     },
     {
       "basename": "Method 2 - Style Transfer Pipeline for 3D Animation",
       "path": "Rendering Shading/Method 2 - Style Transfer Pipeline for 3D Animation.md"
-    },
-    {
-      "basename": "2026-08-23",
-      "path": "2026-08-23.md"
     },
     {
       "basename": "SOURCES",
