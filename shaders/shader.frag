@@ -32,8 +32,8 @@ layout(location = 5) in vec3 fragViewPos_tangent;
 layout(location = 6) in vec3 fragPos_tangent;
 
 layout(location = 0) out vec4 outColor;
-
 layout(binding = 1) uniform sampler2D texSampler;
+layout(binding = 2) uniform sampler1D celMap;
 
 // Returns a perturbed normal using the diffuse map as a height map
 vec3 BumpNormalFromDiffuse(sampler2D tex, vec2 uv, vec3 origNormal, float scale)
@@ -192,7 +192,15 @@ void FourBandCelShading()
 void main() {           
     //DefaultTextureMethod();
     //TwoBandCelShading();
-    ThreeBandCelShading();    
+    //ThreeBandCelShading();
     //LerpCelShading();
     //FourBandCelShading();
+    
+    vec3 normal = normalize(fragWorldNormal);
+    vec3 lightDir = normalize(ubo.lightDir);
+    float NdotL = max(dot(normal, lightDir), 0.0);
+
+    vec3 finalColor = texture(celMap, NdotL).rgb;
+
+    outColor = vec4(finalColor, 1.0);
 }

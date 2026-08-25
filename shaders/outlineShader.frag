@@ -73,5 +73,6 @@ void main() {
 
     //vec3 litColor = PerPixelShading();
     //outColor = vec4(litColor, opacity);
+
     outColor = vec4(0.0, 0.0, 0.0, 1.0);
 }

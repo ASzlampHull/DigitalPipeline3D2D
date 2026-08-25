@@ -23,7 +23,6 @@ public:
 	explicit ResourceManager(const ConfigData& configData) : modelLoader(configData) 
 	{
 		CreateModels();
-		CreateParticles();
 	}
 
 	void CreateTextures(const CoreVulkan* coreVulkan, const CommandPoolVulkan* commandPoolVulkan, const PipelineVulkan* pipelineVulkan, UniformVulkan& uniformBufferObject);

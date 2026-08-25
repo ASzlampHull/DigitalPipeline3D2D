@@ -11,6 +11,7 @@ private:
 	const ModelBuffersVulkan* modelBuffersVulkan = nullptr;
 	const PipelineVulkan* pipelineVulkan = nullptr;
 	const TextureVulkan* textureVulkan = nullptr;
+	const TextureVulkan* textureVulkanCel = nullptr;
 
 	void InitialiseDescriptor();
 	void CreateDescriptorPool();
@@ -18,7 +19,7 @@ private:
 public:
 	VulkanDescriptor() = default;
 	~VulkanDescriptor() = default;
-	explicit VulkanDescriptor(
+	VulkanDescriptor(
 		const CoreVulkan* coreVulkan_,
 		const ModelBuffersVulkan* modelBuffersVulkan_,
 		const PipelineVulkan* pipelineVulkan_,
@@ -31,7 +32,25 @@ public:
 		textureVulkan(textureVulkan_)
 	{
 		InitialiseDescriptor();
+	} 
+
+	VulkanDescriptor(
+		const CoreVulkan* coreVulkan_,
+		const ModelBuffersVulkan* modelBuffersVulkan_,
+		const PipelineVulkan* pipelineVulkan_,
+		const TextureVulkan* textureVulkan_,
+		const TextureVulkan* textureVulkanCel_,
+		const UniformVulkan& uniformBufferObject_)
+		: uniformBufferObject(uniformBufferObject_),
+		coreVulkan(coreVulkan_),
+		modelBuffersVulkan(modelBuffersVulkan_),
+		pipelineVulkan(pipelineVulkan_),
+		textureVulkan(textureVulkan_),
+		textureVulkanCel(textureVulkanCel_)
+	{
+		InitialiseDescriptor();
 	}
+
 	VulkanDescriptor(const VulkanDescriptor& other) = default;
 	VulkanDescriptor& operator=(const VulkanDescriptor& rhs)
 	{
@@ -40,6 +59,7 @@ public:
 			modelBuffersVulkan = rhs.modelBuffersVulkan;
 			pipelineVulkan = rhs.pipelineVulkan;
 			textureVulkan = rhs.textureVulkan;
+			textureVulkanCel = rhs.textureVulkanCel;
 			uniformBufferObject = rhs.uniformBufferObject;
 			descriptorVulkan = rhs.descriptorVulkan;
 		}

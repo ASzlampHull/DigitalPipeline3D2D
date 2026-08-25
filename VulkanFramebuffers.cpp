@@ -28,9 +28,9 @@ void VulkanFramebuffers::CreateDepthResources()
 
     VulkCreate::CreateImage(swapChainVulkan->swapChainExtent.width, swapChainVulkan->swapChainExtent.height, depthFormat,
         VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-        depthVulkan.depthImage, depthVulkan.depthImageMemory, coreVulkan->device, coreVulkan->physicalDevice);
+        depthVulkan.depthImage, depthVulkan.depthImageMemory, coreVulkan->device, coreVulkan->physicalDevice, VkImageType::VK_IMAGE_TYPE_2D);
 
-    depthVulkan.depthImageView = VulkCreate::CreateImageView(coreVulkan->device, depthVulkan.depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+    depthVulkan.depthImageView = VulkCreate::CreateImageView(coreVulkan->device, depthVulkan.depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, VkImageViewType::VK_IMAGE_VIEW_TYPE_2D);
 }
 
 void VulkanFramebuffers::CreateFramebuffers()

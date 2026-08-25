@@ -75,5 +75,12 @@ void ExtrudeByScale()
 
 void main() {
     //ExtrudeByNormal();
-    ExtrudeByScale();
+    //ExtrudeByScale();
+
+    gl_Position = ubo.proj * ubo.view * pushConstants.model * vec4(inPosition, 1.0);
+    fragTexCoord = inTexCoord;
+    fragWorldPos = inPosition;
+    fragWorldNormal = inNormal;
+    fragColor = inColor;
+    
 }

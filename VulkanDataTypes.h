@@ -132,6 +132,11 @@ struct CommandPoolVulkan {
 	}
 };
 
+enum class TextureDimension {
+	Texture1D,
+	Texture2D
+};
+
 struct TextureVulkan {
 	VkImage textureImage = VK_NULL_HANDLE;
 	VkDeviceMemory textureImageMemory = VK_NULL_HANDLE;

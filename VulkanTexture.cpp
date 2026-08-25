@@ -5,16 +5,32 @@
 
 void VulkanTexture::InitialiseTexture(const std::string& texturePath_)
 {
-	const char* const texturePath = texturePath_.c_str();
-	CreateTextureImage(texturePath);
-	CreateTextureImageView();
+    const char* const texturePath = texturePath_.c_str();
+    CreateTextureImage(texturePath);
+    CreateTextureImageView();
 }
 
 void VulkanTexture::CreateTextureImage(const char* texturePath)
 {
-    int texWidth, texHeight, texChannels;
+    int texWidth, texHeight, texChannels, intImagesize = 0;
+    VkImageType imageType = VK_IMAGE_TYPE_2D;
     const stbi_uc* pixels = stbi_load(texturePath, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-    const VkDeviceSize imageSize = texWidth * texHeight * 4;
+    switch (dimension)
+    {
+        case TextureDimension::Texture1D: {
+            intImagesize = texWidth * 4;
+            imageType = VK_IMAGE_TYPE_1D;
+            break;
+        }
+
+        case TextureDimension::Texture2D: {
+            intImagesize = texWidth * texHeight * 4;
+            imageType = VK_IMAGE_TYPE_2D;
+            break;
+        }
+    }
+
+    const VkDeviceSize imageSize = intImagesize;
 
     if (!pixels) {
         throw std::runtime_error("failed to load texture image!");
@@ -31,7 +47,7 @@ void VulkanTexture::CreateTextureImage(const char* texturePath)
 
     //stbi_image_free(pixels);
 
-    VulkCreate::CreateImage(texWidth, texHeight, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureVulkan.textureImage, textureVulkan.textureImageMemory, coreVulkan->device, coreVulkan->physicalDevice);
+    VulkCreate::CreateImage(texWidth, texHeight, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureVulkan.textureImage, textureVulkan.textureImageMemory, coreVulkan->device, coreVulkan->physicalDevice, imageType);
 
     TransitionImageLayout(textureVulkan.textureImage, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
     CopyBufferToImage(stagingBuffer, textureVulkan.textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
@@ -43,7 +59,16 @@ void VulkanTexture::CreateTextureImage(const char* texturePath)
 
 void VulkanTexture::CreateTextureImageView()
 {
-    textureVulkan.textureImageView = VulkCreate::CreateImageView(coreVulkan->device, textureVulkan.textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
+    switch (dimension) {
+    case TextureDimension::Texture1D: {
+        textureVulkan.textureImageView = VulkCreate::CreateImageView(coreVulkan->device, textureVulkan.textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, VkImageViewType::VK_IMAGE_VIEW_TYPE_1D);
+        break;
+    }
+    case TextureDimension::Texture2D: {
+        textureVulkan.textureImageView = VulkCreate::CreateImageView(coreVulkan->device, textureVulkan.textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, VkImageViewType::VK_IMAGE_VIEW_TYPE_2D);
+        break;
+    }
+    }
 }
 
 const void VulkanTexture::CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height) const
@@ -61,7 +86,7 @@ const void VulkanTexture::CopyBufferToImage(VkBuffer buffer, VkImage image, uint
     region.imageOffset = { 0, 0, 0 };
     region.imageExtent = {
         width,
-        height,
+        (dimension == TextureDimension::Texture1D) ? 1 : height,
         1
     };
 

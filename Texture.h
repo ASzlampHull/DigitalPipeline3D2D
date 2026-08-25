@@ -23,7 +23,7 @@ public:
         return *this;
     }
 
-	void CreateTexture(const CoreVulkan* coreVulkan, const CommandPoolVulkan* commandPoolVulkan, const VkSampler* texSampler);
+	void CreateTexture(const CoreVulkan* coreVulkan, const CommandPoolVulkan* commandPoolVulkan, const VkSampler* texSampler, TextureDimension dimension);
 	const void Cleanup() const { vulkanTexture.Cleanup(); }
 
 	// Add methods for loading and managing textures

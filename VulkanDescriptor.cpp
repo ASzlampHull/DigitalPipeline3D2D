@@ -11,13 +11,16 @@ void VulkanDescriptor::CreateDescriptorPool()
     switch (pipelineVulkan->pipelineType) {
         case PipelineType::Graphics: {
             const uint32_t maxSets = 1000;
-            std::array<VkDescriptorPoolSize, 2> poolSizes{};
+            std::array<VkDescriptorPoolSize, 3> poolSizes{};
             // Uniform buffer descriptor
             poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
             poolSizes[0].descriptorCount = maxSets;
             // Combined image sampler descriptor
             poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
             poolSizes[1].descriptorCount = maxSets;
+			// 1D storage buffer descriptor for cel shading
+			poolSizes[2].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			poolSizes[2].descriptorCount = maxSets;
 
             VkDescriptorPoolCreateInfo poolInfo{};
             poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -83,7 +86,12 @@ void VulkanDescriptor::CreateDescriptorSets()
                 imageInfo.imageView = textureVulkan->textureImageView;
                 imageInfo.sampler = *textureVulkan->textureSampler;
 
-                std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+				VkDescriptorImageInfo celShadingImageInfo{};
+				celShadingImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                celShadingImageInfo.imageView = textureVulkanCel->textureImageView;
+				celShadingImageInfo.sampler = *textureVulkanCel->textureSampler;
+
+                std::array<VkWriteDescriptorSet, 3> descriptorWrites{};
 
                 // Write descriptor for uniform buffer
                 descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -102,6 +110,15 @@ void VulkanDescriptor::CreateDescriptorSets()
                 descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
                 descriptorWrites[1].descriptorCount = 1;
                 descriptorWrites[1].pImageInfo = &imageInfo;
+
+				// Write descriptor for cel shading combined image sampler
+				descriptorWrites[2].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				descriptorWrites[2].dstSet = descriptorVulkan.descriptorSets[i];
+				descriptorWrites[2].dstBinding = 2;
+				descriptorWrites[2].dstArrayElement = 0;
+				descriptorWrites[2].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				descriptorWrites[2].descriptorCount = 1;
+				descriptorWrites[2].pImageInfo = &celShadingImageInfo;
 
                 vkUpdateDescriptorSets(coreVulkan->device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
             }

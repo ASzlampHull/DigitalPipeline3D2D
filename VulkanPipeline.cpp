@@ -86,7 +86,14 @@ void VulkanPipeline::CreateDescriptorSetLayout()
     samplerLayoutBinding.pImmutableSamplers = nullptr;
     samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
-    std::array<VkDescriptorSetLayoutBinding, 2> bindings = { uboLayoutBinding, samplerLayoutBinding };
+	VkDescriptorSetLayoutBinding celShadingSamplerLayoutBinding{};
+	celShadingSamplerLayoutBinding.binding = 2;
+	celShadingSamplerLayoutBinding.descriptorCount = 1;
+	celShadingSamplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	celShadingSamplerLayoutBinding.pImmutableSamplers = nullptr;
+	celShadingSamplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+
+    std::array<VkDescriptorSetLayoutBinding, 3> bindings = { uboLayoutBinding, samplerLayoutBinding, celShadingSamplerLayoutBinding };
     VkDescriptorSetLayoutCreateInfo layoutInfo{};
     layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
     layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
@@ -155,6 +162,14 @@ void VulkanPipeline::CreateGraphicsPipeline()
     depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
     depthStencil.depthBoundsTestEnable = VK_FALSE;
     depthStencil.stencilTestEnable = VK_FALSE;
+
+    VkStencilOpState stencilOpState{};
+    stencilOpState.compareOp = VK_COMPARE_OP_ALWAYS;  
+    stencilOpState.passOp = VK_STENCIL_OP_REPLACE;    
+    stencilOpState.reference = 1;                     
+
+	depthStencil.front = stencilOpState;
+	depthStencil.back = stencilOpState;
 
     VkPipelineRasterizationStateCreateInfo rasterizer{};
     rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
@@ -486,6 +501,14 @@ void VulkanPipeline::CreateOutlinePipeline()
     depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
     depthStencil.depthBoundsTestEnable = VK_FALSE;
     depthStencil.stencilTestEnable = VK_FALSE;
+
+    VkStencilOpState stencilOpState{};
+    stencilOpState.compareOp = VK_COMPARE_OP_NOT_EQUAL; 
+    stencilOpState.failOp = VK_STENCIL_OP_KEEP;         
+    stencilOpState.reference = 1;                       
+
+    depthStencil.front = stencilOpState;
+    depthStencil.back = stencilOpState;
 
     VkPipelineRasterizationStateCreateInfo rasterizer{};
     rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;

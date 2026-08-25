@@ -72,7 +72,7 @@ void VulkanSwapChain::CreateImageViews()
 	swapChainVulkan.swapChainImageViews.resize(swapChainVulkan.swapChainImages.size());
 
 	for (uint32_t i = 0; i < swapChainVulkan.swapChainImages.size(); i++) {
-		swapChainVulkan.swapChainImageViews[i] = VulkCreate::CreateImageView(coreVulkan->device, swapChainVulkan.swapChainImages[i], swapChainVulkan.swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
+		swapChainVulkan.swapChainImageViews[i] = VulkCreate::CreateImageView(coreVulkan->device, swapChainVulkan.swapChainImages[i], swapChainVulkan.swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, VkImageViewType::VK_IMAGE_VIEW_TYPE_2D);
 	}
 }
 

@@ -142,37 +142,6 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
     scissor.extent = swapChainVulkan->swapChainExtent;
     vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-#pragma region OutlinePass
-
-	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, outlinePipelineVulkan->pipeline);
-	for (const auto& pair : resourceManager.GetModels()) {
-		const auto& model = pair.second;
-		const auto& mesh = model.GetMesh();
-		const auto& descriptorVulkan = model.GetMaterial().GetDescriptorVulkan();
-		const auto& modelBuffersVulkan = model.GetModelBuffersVulkan();
-		std::array<VkBuffer, 1> vertexBuffers = { modelBuffersVulkan->vertexBuffer.buffer };
-		std::array<VkDeviceSize, 1> offsets = { 0 };
-
-		vkCmdBindVertexBuffers(commandBuffer, 0, static_cast<uint32_t>(vertexBuffers.size()), vertexBuffers.data(), offsets.data());
-		vkCmdBindIndexBuffer(commandBuffer, modelBuffersVulkan->indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
-
-		const uint32_t indexCount = static_cast<uint32_t>(mesh.GetVertexIndices().size());
-
-		vkCmdBindDescriptorSets(
-			commandBuffer,
-			VK_PIPELINE_BIND_POINT_GRAPHICS,
-			outlinePipelineVulkan->pipelineLayout,
-			0, 1,
-			&descriptorVulkan->descriptorSets[currentFrame],
-			0, nullptr
-		);
-
-		model.UpdatePushConstants(commandBuffer, outlinePipelineVulkan);
-		vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
-	}
-
-#pragma endregion
-
 #pragma region NormalPass
 
     vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineVulkan->pipeline);
@@ -202,9 +171,49 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
         );
 
         model.UpdatePushConstants(commandBuffer, pipelineVulkan);
+		vkCmdSetStencilReference(commandBuffer, VK_STENCIL_FACE_FRONT_AND_BACK, 1); // Stencil reference value for the model
         vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
 
         vertexCount += static_cast<uint32_t>(mesh.GetVertices().size());
+    }
+
+#pragma endregion
+
+#pragma region OutlinePass
+
+    vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, outlinePipelineVulkan->pipeline);
+
+    for (const auto& pair : resourceManager.GetModels()) {
+        auto model = pair.second;
+        const auto& mesh = model.GetMesh();
+        const auto& descriptorVulkan = model.GetMaterial().GetDescriptorVulkan();
+        const auto& modelBuffersVulkan = model.GetModelBuffersVulkan();
+        std::array<VkBuffer, 1> vertexBuffers = { modelBuffersVulkan->vertexBuffer.buffer };
+        std::array<VkDeviceSize, 1> offsets = { 0 };
+
+        vkCmdBindVertexBuffers(commandBuffer, 0, static_cast<uint32_t>(vertexBuffers.size()), vertexBuffers.data(), offsets.data());
+        vkCmdBindIndexBuffer(commandBuffer, modelBuffersVulkan->indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
+
+        const uint32_t indexCount = static_cast<uint32_t>(mesh.GetVertexIndices().size());
+
+        vkCmdBindDescriptorSets(
+            commandBuffer,
+            VK_PIPELINE_BIND_POINT_GRAPHICS,
+            outlinePipelineVulkan->pipelineLayout,
+            0, 1,
+            &descriptorVulkan->descriptorSets[currentFrame],
+            0, nullptr
+        );
+
+        Transformations modelTransfrom = model.GetTransformations();
+		modelTransfrom.scale *= 1.05f; // Scale up for outline effect
+        model.SetTransformations(modelTransfrom);
+
+        model.UpdatePushConstants(commandBuffer, outlinePipelineVulkan);
+        vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
+
+		modelTransfrom.scale /= 1.05f; // Reset scale back to original
+		model.SetTransformations(modelTransfrom);
     }
 
 #pragma endregion

@@ -48,8 +48,6 @@ void ResourceManager::CreateTextures(const CoreVulkan* coreVulkan,
 		auto& model = pair.second;
 		model.CreateMaterialResources(coreVulkan, commandPoolVulkan, model.GetModelBuffersVulkan(), pipelineVulkan, &textureSamplers["Main"], uniformBufferObject);
 	}
-
-	fireParticles.CreateVulkanResources(coreVulkan, commandPoolVulkan, pipelineVulkan, uniformBufferObject, &textureSamplers["Main"]);
 }
 
 void ResourceManager::CleanupTextures(const CoreVulkan* coreVulkan)

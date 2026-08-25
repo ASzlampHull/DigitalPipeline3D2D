@@ -49,7 +49,7 @@ void Particles::CreateVertexIndexBuffers(const CoreVulkan* coreVulkan, const Com
 
 void Particles::CreateTexture(const CoreVulkan* coreVulkan_, const CommandPoolVulkan* commandPoolVulkan_, const VkSampler* texSampler)
 {
-    texture.CreateTexture(coreVulkan_, commandPoolVulkan_, texSampler);
+    texture.CreateTexture(coreVulkan_, commandPoolVulkan_, texSampler, TextureDimension::Texture2D);
 }
 
 void Particles::CreateDescriptor(const CoreVulkan* coreVulkan_, const ModelBuffersVulkan* modelBuffersVulkan_, const PipelineVulkan* pipelineVulkan_, const UniformVulkan& uniformBufferObject)
