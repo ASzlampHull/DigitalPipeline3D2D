@@ -189,13 +189,8 @@ void FourBandCelShading()
     outColor = vec4(finalColour, 1.0);
 }
 
-void main() {           
-    //DefaultTextureMethod();
-    //TwoBandCelShading();
-    //ThreeBandCelShading();
-    //LerpCelShading();
-    //FourBandCelShading();
-    
+void TextureCelShading()
+{
     vec3 normal = normalize(fragWorldNormal);
     vec3 lightDir = normalize(ubo.lightDir);
     float NdotL = max(dot(normal, lightDir), 0.0);
@@ -203,4 +198,14 @@ void main() {
     vec3 finalColor = texture(celMap, NdotL).rgb;
 
     outColor = vec4(finalColor, 1.0);
+}
+
+void main() {           
+    //DefaultTextureMethod();
+    //TwoBandCelShading();
+    //ThreeBandCelShading();
+    //LerpCelShading();
+    //FourBandCelShading();
+    TextureCelShading();
+    
 }
