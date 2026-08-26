@@ -135,9 +135,6 @@
     <ClCompile Include="VulkanExternals.cpp">
       <Filter>Source Files\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="DayNightSeasonal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="HelloTriangleApplication.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -164,9 +161,6 @@
     </ClCompile>
     <ClCompile Include="IMGUIManager.cpp">
       <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Particles.cpp">
-      <Filter>Source Files\Models</Filter>
     </ClCompile>
     <ClCompile Include="SSBOBuffer.cpp">
       <Filter>Source Files\PipelineTools</Filter>
@@ -283,9 +277,6 @@
     <ClInclude Include="VulkanFrameSync.h">
       <Filter>Header Files\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="DayNightSeasonal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="HelloTriangleApplication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -315,9 +306,6 @@
     </ClInclude>
     <ClInclude Include="IMGUIManager.h">
       <Filter>Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Particles.h">
-      <Filter>Header Files\Models</Filter>
     </ClInclude>
     <ClInclude Include="SSBOBuffer.h">
       <Filter>Header Files\PipelineTools</Filter>
