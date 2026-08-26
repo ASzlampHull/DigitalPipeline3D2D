@@ -136,7 +136,6 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ConfigLoader.cpp" />
-    <ClCompile Include="DayNightSeasonal.cpp" />
     <ClCompile Include="HelloTriangleApplication.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="IMGUIManager.cpp" />
@@ -154,7 +153,6 @@
     <ClCompile Include="MTLParser.cpp" />
     <ClCompile Include="OBJParser.cpp" />
     <ClCompile Include="ParserBase.cpp" />
-    <ClCompile Include="Particles.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -206,7 +204,6 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ConfigDataTypes.h" />
     <ClInclude Include="ConfigLoader.h" />
-    <ClInclude Include="DayNightSeasonal.h" />
     <ClInclude Include="HelloTriangleApplication.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
@@ -217,7 +214,6 @@
     <ClInclude Include="imstb_rectpack.h" />
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
-    <ClInclude Include="Particles.h" />
     <ClInclude Include="SSBOBuffer.h" />
     <ClInclude Include="VulkanBuffers.h" />
     <ClInclude Include="VulkanCommandBuffers.h" />
