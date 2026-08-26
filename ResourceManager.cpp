@@ -8,11 +8,6 @@ void ResourceManager::CreateModels() {
 	}
 }
 
-void ResourceManager::CreateParticles()
-{
-	fireParticles = Particles();
-}
-
 void ResourceManager::CreateMainTextureSampler(const CoreVulkan* coreVulkan)
 {
 	VkPhysicalDeviceProperties properties{};
