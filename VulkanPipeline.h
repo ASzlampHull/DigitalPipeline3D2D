@@ -9,11 +9,9 @@
 class VulkanPipeline final {
 private:
 	PipelineVulkan pipelineVulkan = {};
-	PipelineVulkan particlesPipelineVulkan = {};
 	PipelineVulkan computePipelineVulkan = {};
 	PipelineVulkan outlinePipelineVulkan = {};
 	ShaderVulkan shaderVulkan = {};
-	ShaderVulkan particlesVulkan = {};
 	ShaderVulkan computeVulkan = {};
 	const SwapChainVulkan* swapChainVulkan = nullptr;
 	const CoreVulkan* coreVulkan = nullptr;
@@ -22,7 +20,6 @@ private:
 	void CreateRenderPass();
 	void CreateDescriptorSetLayout();
 	void CreateGraphicsPipeline();
-	void CreateParticlesPipeline();
 	void CreateComputeDescriptorSetLayout();
 	void CreateComputePipeline();
 	void CreateOutlinePipeline();
@@ -47,10 +44,8 @@ public:
 			this->coreVulkan = rhs.coreVulkan;
 			this->swapChainVulkan = rhs.swapChainVulkan;
 			this->pipelineVulkan = rhs.pipelineVulkan;
-			this->particlesPipelineVulkan = rhs.particlesPipelineVulkan;
 			this->computePipelineVulkan = rhs.computePipelineVulkan;
 			this->shaderVulkan = rhs.shaderVulkan;
-			this->particlesVulkan = rhs.particlesVulkan;
 			this->computeVulkan = rhs.computeVulkan;
 			this->outlinePipelineVulkan = rhs.outlinePipelineVulkan;
 		}
@@ -58,7 +53,6 @@ public:
 	}
 
 	const PipelineVulkan& GetPipelineVulkan() const { return pipelineVulkan; };
-	const PipelineVulkan& GetParticlesPipelineVulkan() const { return particlesPipelineVulkan; };
 	const PipelineVulkan& GetComputePipelineVulkan() const { return computePipelineVulkan; };
 	const PipelineVulkan& GetOutlinePipelineVulkan() const { return outlinePipelineVulkan; };
 
