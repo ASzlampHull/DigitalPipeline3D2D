@@ -18,7 +18,8 @@ void Renderer::InitVulkan()
     resourceManager.CreateTextures(coreVulkan, commandPoolVulkan, pipelineVulkan, uniformBufferObject);
 
 	//Compute pipeline resources
-	ssboBuffer = SSBOBuffer(coreVulkan, computePipelineVulkan);
+	//ssboBuffer = SSBOBuffer(coreVulkan, computePipelineVulkan);
+	postProcessingLines = PostProcessingLines(coreVulkan, computePipelineVulkan, swapChainVulkan);
 
 	vulkanCommandBuffers = VulkanCommandBuffers(coreVulkan, commandPoolVulkan);
 	commandBuffersVulkan = &vulkanCommandBuffers.GetCommandBuffersVulkan();
@@ -88,7 +89,8 @@ void Renderer::Cleanup()
         vkDestroyBuffer(coreVulkan->device, uniformBufferObject.uniformBuffers[i], nullptr);
         vkFreeMemory(coreVulkan->device, uniformBufferObject.uniformBuffersMemory[i], nullptr);
     }
-	ssboBuffer.CleanUp();
+	//ssboBuffer.CleanUp();
+	postProcessingLines.CleanUp();
 	resourceManager.CleanupTextures(coreVulkan);
     vulkanPipeline.CleanupDescriptorSetLayout();
     resourceManager.CleanupBuffersVI();
@@ -108,7 +110,6 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
     if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
         throw std::runtime_error("failed to begin recording command buffer!");
     }
-
 
 #pragma region Main Render Pass
 
@@ -171,7 +172,7 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
         );
 
         model.UpdatePushConstants(commandBuffer, pipelineVulkan);
-		vkCmdSetStencilReference(commandBuffer, VK_STENCIL_FACE_FRONT_AND_BACK, 1); // Stencil reference value for the model
+		//vkCmdSetStencilReference(commandBuffer, VK_STENCIL_FACE_FRONT_AND_BACK, 1); // Stencil reference value for the model
         vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
 
         vertexCount += static_cast<uint32_t>(mesh.GetVertices().size());
@@ -179,6 +180,7 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
 
 #pragma endregion
 
+    /*
 #pragma region OutlinePass
 
     vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, outlinePipelineVulkan->pipeline);
@@ -217,12 +219,117 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
     }
 
 #pragma endregion
+    */
 
 	// Render IMGUI
-    if (displayIMGUI)
-        imguiManager.DisplayIMGUI(currentFrame, deltaTime, vertexCount);
+    //if (displayIMGUI)
+    //    imguiManager.DisplayIMGUI(currentFrame, deltaTime, vertexCount);
 
     vkCmdEndRenderPass(commandBuffer);
+
+#pragma endregion
+
+#pragma region PostProcessingPass
+
+	// Swapchain and output image ready for Compute shader processing
+    VkImageMemoryBarrier2 preComputeBarrierInput = VulkSync::CreateImageMemoryBarrier(
+        swapChainVulkan->swapChainImages[imageIndex],
+        VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+        VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+        VK_ACCESS_2_SHADER_READ_BIT,
+        VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+        VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT,
+        VK_IMAGE_ASPECT_COLOR_BIT
+    );
+	VkDependencyInfo depInfo2 = VulkSync::CreateDependencyInfo(VK_STRUCTURE_TYPE_DEPENDENCY_INFO, 0, nullptr, nullptr, &preComputeBarrierInput, 0, 0, 1);
+    vkCmdPipelineBarrier2(commandBuffer, &depInfo2);
+
+    VkImageMemoryBarrier2 preComputeBarrierOutput = VulkSync::CreateImageMemoryBarrier(
+		postProcessingLines.GetOutputScreenTexture().textureImage,
+		VK_IMAGE_LAYOUT_UNDEFINED,
+		VK_IMAGE_LAYOUT_GENERAL,
+		VK_ACCESS_2_NONE,
+		VK_ACCESS_2_SHADER_WRITE_BIT,
+		VK_PIPELINE_STAGE_2_NONE,
+		VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT,
+		VK_IMAGE_ASPECT_COLOR_BIT
+	);
+	VkDependencyInfo depInfo3 = VulkSync::CreateDependencyInfo(VK_STRUCTURE_TYPE_DEPENDENCY_INFO, 0, nullptr, nullptr, &preComputeBarrierOutput, 0, 0, 1);
+    vkCmdPipelineBarrier2(commandBuffer, &depInfo3);
+
+	// Bind the output image to the compute shader descriptor set
+	postProcessingLines.UpdateInputDescriptorForCurrentImage(currentFrame, imageIndex);
+    vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, computePipelineVulkan->pipeline);
+    vkCmdBindDescriptorSets(commandBuffer, 
+        VK_PIPELINE_BIND_POINT_COMPUTE,
+        computePipelineVulkan->pipelineLayout,
+        0, 1, &postProcessingLines.GetDescriptorVulkan().descriptorSets[currentFrame],
+        0, nullptr);
+	uint32_t local_sizeX = 8; // Must match the local_size_x in your compute shader
+	uint32_t local_sizeY = 8; // Must match the local_size_y in your compute shader
+	uint32_t groupCountX = (swapChainVulkan->swapChainExtent.width + local_sizeX - 1) / local_sizeX;
+	uint32_t groupCountY = (swapChainVulkan->swapChainExtent.height + local_sizeY - 1) / local_sizeY;
+    vkCmdDispatch(commandBuffer, groupCountX, groupCountY, 1);
+
+	// Transition the output image to be ready for transfer back to the swapchain
+	VkImageMemoryBarrier2 postComputeBarrierOutput = VulkSync::CreateImageMemoryBarrier(
+		postProcessingLines.GetOutputScreenTexture().textureImage,
+		VK_IMAGE_LAYOUT_GENERAL,
+		VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+		VK_ACCESS_2_SHADER_WRITE_BIT,
+		VK_ACCESS_2_TRANSFER_READ_BIT,
+		VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT,
+		VK_PIPELINE_STAGE_2_TRANSFER_BIT,
+		VK_IMAGE_ASPECT_COLOR_BIT
+	);
+	VkDependencyInfo depInfo4 = VulkSync::CreateDependencyInfo(VK_STRUCTURE_TYPE_DEPENDENCY_INFO, 0, nullptr, nullptr, &postComputeBarrierOutput, 0, 0, 1);
+	vkCmdPipelineBarrier2(commandBuffer, &depInfo4);
+
+    VkImageMemoryBarrier2 postComputeBarrierInput = VulkSync::CreateImageMemoryBarrier(
+        swapChainVulkan->swapChainImages[imageIndex],
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        VK_ACCESS_2_SHADER_READ_BIT,
+        VK_ACCESS_2_TRANSFER_WRITE_BIT,
+        VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT,
+        VK_PIPELINE_STAGE_2_TRANSFER_BIT,
+        VK_IMAGE_ASPECT_COLOR_BIT
+    );
+    VkDependencyInfo depInfo5 = VulkSync::CreateDependencyInfo(VK_STRUCTURE_TYPE_DEPENDENCY_INFO, 0, nullptr, nullptr, &postComputeBarrierInput, 0, 0, 1);
+    vkCmdPipelineBarrier2(commandBuffer, &depInfo5);
+
+    // Copy output image to swapchain
+    VkImageCopy copyRegion{};
+    copyRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    copyRegion.srcSubresource.layerCount = 1;
+    copyRegion.srcSubresource.mipLevel = 0;
+    copyRegion.srcSubresource.baseArrayLayer = 0;
+    copyRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    copyRegion.dstSubresource.layerCount = 1;
+    copyRegion.dstSubresource.mipLevel = 0;
+    copyRegion.dstSubresource.baseArrayLayer = 0;
+    copyRegion.extent.width = swapChainVulkan->swapChainExtent.width;
+    copyRegion.extent.height = swapChainVulkan->swapChainExtent.height;
+    copyRegion.extent.depth = 1;
+    vkCmdCopyImage(commandBuffer,
+        postProcessingLines.GetOutputScreenTexture().textureImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+        swapChainVulkan->swapChainImages[imageIndex], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        1, &copyRegion);
+
+	// Transition swapchain image back to present layout
+    VkImageMemoryBarrier2 presentBarrier = VulkSync::CreateImageMemoryBarrier(
+        swapChainVulkan->swapChainImages[imageIndex],
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+        VK_ACCESS_2_TRANSFER_WRITE_BIT,
+        VK_ACCESS_2_NONE,
+        VK_PIPELINE_STAGE_2_TRANSFER_BIT,
+        VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT,
+        VK_IMAGE_ASPECT_COLOR_BIT
+    );
+	VkDependencyInfo depInfo6 = VulkSync::CreateDependencyInfo(VK_STRUCTURE_TYPE_DEPENDENCY_INFO, 0, nullptr, nullptr, &presentBarrier, 0, 0, 1);
+	vkCmdPipelineBarrier2(commandBuffer, &depInfo6);
 
 #pragma endregion
 

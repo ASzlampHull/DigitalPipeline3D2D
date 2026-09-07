@@ -249,14 +249,21 @@ void VulkanPipeline::CreateGraphicsPipeline()
 
 void VulkanPipeline::CreateComputeDescriptorSetLayout()
 {
-	VkDescriptorSetLayoutBinding computeLayoutBinding{};
-	computeLayoutBinding.binding = 0;
-	computeLayoutBinding.descriptorCount = 1;
-	computeLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-	computeLayoutBinding.pImmutableSamplers = nullptr;
-	computeLayoutBinding.stageFlags = VK_SHADER_STAGE_COMPUTE_BIT;
+    // Binding for the input texture of the screen
+    VkDescriptorSetLayoutBinding inputBinding{};
+    inputBinding.binding = 0;
+    inputBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    inputBinding.descriptorCount = 1;
+    inputBinding.stageFlags = VK_SHADER_STAGE_COMPUTE_BIT;
 
-	std::array<VkDescriptorSetLayoutBinding, 1> bindings = { computeLayoutBinding };
+    // Descriptor set layout binding for the output storage image to the screen
+    VkDescriptorSetLayoutBinding outputBinding{};
+    outputBinding.binding = 1;
+    outputBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+    outputBinding.descriptorCount = 1;
+    outputBinding.stageFlags = VK_SHADER_STAGE_COMPUTE_BIT;
+
+	std::array<VkDescriptorSetLayoutBinding, 2> bindings = { inputBinding, outputBinding };
 	VkDescriptorSetLayoutCreateInfo layoutInfo{};
 	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 	layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());

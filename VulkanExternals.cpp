@@ -250,3 +250,38 @@ namespace VulkCommands {
 }
 
 #pragma endregion
+
+VkImageMemoryBarrier2 VulkSync::CreateImageMemoryBarrier(VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout, VkAccessFlags srcAccessMask, VkAccessFlags dstAccessMask, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkImageAspectFlags aspectMask)
+{
+	VkImageMemoryBarrier2 imageMemoryBarrier{};
+	imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
+    imageMemoryBarrier.pNext = nullptr;
+    imageMemoryBarrier.srcStageMask = srcStageMask;
+	imageMemoryBarrier.dstStageMask = dstStageMask;
+    imageMemoryBarrier.srcAccessMask = srcAccessMask;
+    imageMemoryBarrier.dstAccessMask = dstAccessMask;
+    imageMemoryBarrier.oldLayout = oldLayout;
+    imageMemoryBarrier.newLayout = newLayout;
+    imageMemoryBarrier.image = image;
+    imageMemoryBarrier.subresourceRange.aspectMask = aspectMask;
+    imageMemoryBarrier.subresourceRange.levelCount = 1;
+    imageMemoryBarrier.subresourceRange.layerCount = 1;
+
+    return imageMemoryBarrier;
+}
+
+VkDependencyInfo VulkSync::CreateDependencyInfo(VkStructureType sType, VkDependencyFlags dependencyFlags, const VkMemoryBarrier2* pMemoryBarriers, const VkBufferMemoryBarrier2* pBufferMemoryBarriers, const VkImageMemoryBarrier2* pImageMemoryBarriers, uint32_t memoryBarrierCount, uint32_t bufferMemoryBarrierCount, uint32_t imageMemoryBarrierCount)
+{
+    VkDependencyInfo depInfo{};
+    depInfo.sType = sType;
+	depInfo.pNext = nullptr;
+	depInfo.dependencyFlags = dependencyFlags;
+	depInfo.memoryBarrierCount = memoryBarrierCount;
+	depInfo.pMemoryBarriers = pMemoryBarriers;
+	depInfo.bufferMemoryBarrierCount = bufferMemoryBarrierCount;
+	depInfo.pBufferMemoryBarriers = pBufferMemoryBarriers;
+	depInfo.imageMemoryBarrierCount = imageMemoryBarrierCount;
+	depInfo.pImageMemoryBarriers = pImageMemoryBarriers;
+
+    return depInfo;
+}

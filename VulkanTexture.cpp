@@ -147,8 +147,7 @@ const void VulkanTexture::TransitionImageLayout(VkImage image, VkImageLayout old
 
 const void VulkanTexture::Cleanup() const
 {
-    vkDestroyImageView(coreVulkan->device, textureVulkan.textureImageView, nullptr);
-
     vkDestroyImage(coreVulkan->device, textureVulkan.textureImage, nullptr);
+    vkDestroyImageView(coreVulkan->device, textureVulkan.textureImageView, nullptr);
     vkFreeMemory(coreVulkan->device, textureVulkan.textureImageMemory, nullptr);
 }

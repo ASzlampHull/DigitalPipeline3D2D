@@ -69,3 +69,12 @@ namespace VulkCommands {
 }
 
 #pragma endregion
+
+#pragma region Synchronisation Primitives
+
+namespace VulkSync {
+	VkImageMemoryBarrier2 CreateImageMemoryBarrier(VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout, VkAccessFlags srcAccessMask, VkAccessFlags dstAccessMask, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkImageAspectFlags aspectMask);
+	VkDependencyInfo CreateDependencyInfo(VkStructureType sType, VkDependencyFlags dependencyFlags, const VkMemoryBarrier2* pMemoryBarriers, const VkBufferMemoryBarrier2* pBufferMemoryBarriers, const VkImageMemoryBarrier2* pImageMemoryBarriers, uint32_t memoryBarrierCount, uint32_t bufferMemoryBarrierCount, uint32_t imageMemoryBarrierCount);
+}
+
+#pragma endregion

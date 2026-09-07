@@ -165,6 +165,9 @@
     <ClCompile Include="SSBOBuffer.cpp">
       <Filter>Source Files\PipelineTools</Filter>
     </ClCompile>
+    <ClCompile Include="PostProcessingLines.cpp">
+      <Filter>Source Files\PipelineTools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="shaders\shader.comp">
@@ -308,6 +311,9 @@
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="SSBOBuffer.h">
+      <Filter>Header Files\PipelineTools</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcessingLines.h">
       <Filter>Header Files\PipelineTools</Filter>
     </ClInclude>
   </ItemGroup>

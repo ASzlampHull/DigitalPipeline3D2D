@@ -38,6 +38,7 @@ void VulkanDescriptor::CreateDescriptorPool()
             VkDescriptorPoolSize computePoolSize{};
             computePoolSize.type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
             computePoolSize.descriptorCount = maxComputeSets;
+
             VkDescriptorPoolCreateInfo computePoolInfo{};
             computePoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
             computePoolInfo.poolSizeCount = 1;

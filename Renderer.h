@@ -10,6 +10,7 @@
 #include "VulkanCommandBuffers.h"
 #include "VulkanFrameSync.h"
 #include "SSBOBuffer.h"
+#include "PostProcessingLines.h"
 #include "IMGUIManager.h"
 #include <chrono>
 #include <array>
@@ -45,6 +46,7 @@ private:
 
 	// Compute resources
 	SSBOBuffer ssboBuffer;
+	PostProcessingLines postProcessingLines;
 
     uint32_t currentFrame = 0;
     float deltaTime = 0.0f;
@@ -91,6 +93,7 @@ public:
             deltaTime = other.deltaTime;
             timeAccumulator = other.timeAccumulator;
 			ssboBuffer = other.ssboBuffer;
+            postProcessingLines = other.postProcessingLines;
         }
         return *this;
     }
