@@ -107,11 +107,14 @@ void VulkanPipeline::CreateGraphicsPipeline()
 {
     std::vector<char> vertShaderCode;
     std::vector<char> fragShaderCode;
+    std::vector<char> geometryShaderCode;
 	ReadFile("shaders/shader.vert.spv", vertShaderCode);
 	ReadFile("shaders/shader.frag.spv", fragShaderCode);
+	ReadFile("shaders/shader.geom.spv", geometryShaderCode);
 
     shaderVulkan.vertShaderModule = CreateShaderModule(vertShaderCode);
     shaderVulkan.fragShaderModule = CreateShaderModule(fragShaderCode);
+    shaderVulkan.geometryShaderModule = CreateShaderModule(geometryShaderCode);
 
     VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
     vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -124,6 +127,12 @@ void VulkanPipeline::CreateGraphicsPipeline()
     fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
     fragShaderStageInfo.module = shaderVulkan.fragShaderModule;
     fragShaderStageInfo.pName = "main";
+
+    VkPipelineShaderStageCreateInfo geometryShaderInfo{};
+	geometryShaderInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	geometryShaderInfo.stage = VK_SHADER_STAGE_GEOMETRY_BIT;
+    geometryShaderInfo.module = shaderVulkan.geometryShaderModule;
+    geometryShaderInfo.pName = "main";
 
     VkPushConstantRange pushConstantRange{};
     pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
@@ -218,7 +227,7 @@ void VulkanPipeline::CreateGraphicsPipeline()
         throw std::runtime_error("failed to create pipeline layout!");
     }
 
-    std::array<VkPipelineShaderStageCreateInfo, 2> shaderStages = { vertShaderStageInfo, fragShaderStageInfo };
+    std::array<VkPipelineShaderStageCreateInfo, 3> shaderStages = { vertShaderStageInfo, fragShaderStageInfo, geometryShaderInfo };
 
     VkGraphicsPipelineCreateInfo pipelineInfo{};
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -446,6 +455,7 @@ void VulkanPipeline::CreateOutlinePipeline()
 
     vkDestroyShaderModule(coreVulkan->device, shaderVulkan.fragShaderModule, nullptr);
     vkDestroyShaderModule(coreVulkan->device, shaderVulkan.vertShaderModule, nullptr);
+    vkDestroyShaderModule(coreVulkan->device, shaderVulkan.geometryShaderModule, nullptr);
 }
 
 const void VulkanPipeline::ReadFile(const std::string& filename, std::vector<char>& buffer_) const

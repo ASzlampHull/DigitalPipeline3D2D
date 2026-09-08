@@ -109,7 +109,6 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
         throw std::runtime_error("failed to begin recording command buffer!");
     }
 
-
 #pragma region Main Render Pass
 
     VkRenderPassBeginInfo renderPassInfo{};
@@ -171,7 +170,7 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
         );
 
         model.UpdatePushConstants(commandBuffer, pipelineVulkan);
-		vkCmdSetStencilReference(commandBuffer, VK_STENCIL_FACE_FRONT_AND_BACK, 1); // Stencil reference value for the model
+		//vkCmdSetStencilReference(commandBuffer, VK_STENCIL_FACE_FRONT_AND_BACK, 1); // Stencil reference value for the model
         vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
 
         vertexCount += static_cast<uint32_t>(mesh.GetVertices().size());
@@ -179,8 +178,9 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
 
 #pragma endregion
 
+/*
 #pragma region OutlinePass
-
+    
     vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, outlinePipelineVulkan->pipeline);
 
     for (const auto& pair : resourceManager.GetModels()) {
@@ -217,6 +217,7 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
     }
 
 #pragma endregion
+*/
 
 	// Render IMGUI
     if (displayIMGUI)

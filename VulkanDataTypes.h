@@ -102,6 +102,7 @@ struct ShaderVulkan {
 	VkShaderModule vertShaderModule = VK_NULL_HANDLE;
 	VkShaderModule fragShaderModule = VK_NULL_HANDLE;
 	VkShaderModule computeShaderModule = VK_NULL_HANDLE;
+	VkShaderModule geometryShaderModule = VK_NULL_HANDLE;
 
 	ShaderVulkan() = default;
 	~ShaderVulkan() = default;
@@ -111,6 +112,7 @@ struct ShaderVulkan {
 		if (this != &rhs) {
 			this->vertShaderModule = rhs.vertShaderModule;
 			this->fragShaderModule = rhs.fragShaderModule;
+			this->computeShaderModule = rhs.computeShaderModule;
 			this->computeShaderModule = rhs.computeShaderModule;
 		}
 		return *this;
