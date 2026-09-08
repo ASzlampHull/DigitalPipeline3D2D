@@ -4,6 +4,9 @@ void Mesh::CalculateTangentsAndBinormals()
 {
     tangents.resize(vertices.size());
     binormals.resize(vertices.size());
+    triangleIds.resize(vertices.size());
+
+    unsigned int triID = 0;
 
     for (size_t i = 0; i + 2 < vertices.size(); i += 3) {
         const glm::vec3& v0 = vertices[i];
@@ -30,6 +33,11 @@ void Mesh::CalculateTangentsAndBinormals()
         binormals[i] = glm::normalize(binormal);
         binormals[i + 1] = glm::normalize(binormal);
         binormals[i + 2] = glm::normalize(binormal);
+
+        triangleIds[i] = triID;
+        triangleIds[i + 1] = triID;
+        triangleIds[i + 2] = triID;
+        triID++;
     }
 }
 
@@ -47,6 +55,7 @@ void Mesh::CreateMeshObject()
 		vertex.normal = normals[i];
 		vertex.tangent = tangents[i];
 		vertex.binormal = binormals[i];
+        vertex.triangleID = triangleIds[i];
 
 		meshObject.push_back(vertex);
 	}

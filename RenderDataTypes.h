@@ -36,6 +36,7 @@ struct Vertex {
     glm::vec2 texCoord;
     glm::vec3 tangent;
     glm::vec3 binormal;
+    unsigned int triangleID;
 
     static void getBindingDescription(VkVertexInputBindingDescription& bindingDescription_) {
         VkVertexInputBindingDescription bindingDescription{};
@@ -45,8 +46,8 @@ struct Vertex {
         bindingDescription_ = bindingDescription;
     }
 
-    static void getAttributeDescriptions(std::array<VkVertexInputAttributeDescription, 6>& attributeDescriptions_) {
-        std::array<VkVertexInputAttributeDescription, 6> attributeDescriptions{};
+    static void getAttributeDescriptions(std::array<VkVertexInputAttributeDescription, 7>& attributeDescriptions_) {
+        std::array<VkVertexInputAttributeDescription, 7> attributeDescriptions{};
         attributeDescriptions[0].binding = 0;
         attributeDescriptions[0].location = 0;
         attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
@@ -76,6 +77,11 @@ struct Vertex {
         attributeDescriptions[5].location = 5;
         attributeDescriptions[5].format = VK_FORMAT_R32G32B32_SFLOAT;
         attributeDescriptions[5].offset = offsetof(Vertex, binormal);
+
+        attributeDescriptions[6].binding = 0;
+        attributeDescriptions[6].location = 6;
+        attributeDescriptions[6].format = VK_FORMAT_R32_UINT;
+        attributeDescriptions[6].offset = offsetof(Vertex, triangleID);
 
         attributeDescriptions_ = attributeDescriptions;
     }

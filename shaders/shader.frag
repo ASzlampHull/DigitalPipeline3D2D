@@ -30,6 +30,7 @@ layout(location = 3) in vec2 fragTexCoord;
 layout(location = 4) in vec3 fragLightPos_tangent;
 layout(location = 5) in vec3 fragViewPos_tangent;
 layout(location = 6) in vec3 fragPos_tangent;
+layout(location = 7) in uint fragTriangleId;
 
 layout(location = 0) out vec4 outColor;
 

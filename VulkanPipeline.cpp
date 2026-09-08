@@ -140,7 +140,7 @@ void VulkanPipeline::CreateGraphicsPipeline()
     pushConstantRange.size = sizeof(ModelPushConstants);
 
     VkVertexInputBindingDescription bindingDescription;
-    std::array<VkVertexInputAttributeDescription, 6> attributeDescriptions;
+    std::array<VkVertexInputAttributeDescription, 7> attributeDescriptions;
 	Vertex::getBindingDescription(bindingDescription);
 	Vertex::getAttributeDescriptions(attributeDescriptions);
 
@@ -343,7 +343,7 @@ void VulkanPipeline::CreateOutlinePipeline()
     pushConstantRange.size = sizeof(ModelPushConstants);
 
     VkVertexInputBindingDescription bindingDescription;
-    std::array<VkVertexInputAttributeDescription, 6> attributeDescriptions;
+    std::array<VkVertexInputAttributeDescription, 7> attributeDescriptions;
     Vertex::getBindingDescription(bindingDescription);
     Vertex::getAttributeDescriptions(attributeDescriptions);
 

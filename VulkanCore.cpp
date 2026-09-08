@@ -117,8 +117,14 @@ void VulkanCore::CreateLogicalDevice()
     deviceFeatures.geometryShader = VK_TRUE;
     deviceFeatures.fillModeNonSolid = VK_TRUE; // Wireframe debugging
 
+    // Synchronization feature
+    VkPhysicalDeviceSynchronization2Features sync2Features{};
+    sync2Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES;
+    sync2Features.synchronization2 = VK_TRUE;
+
     VkDeviceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    createInfo.pNext = &sync2Features;
 
     createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
     createInfo.pQueueCreateInfos = queueCreateInfos.data();

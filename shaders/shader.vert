@@ -29,6 +29,7 @@ layout(location = 2) in vec3 inNormal;
 layout(location = 3) in vec2 inTexCoord;
 layout(location = 4) in vec3 inTangent;
 layout(location = 5) in vec3 inBinormal;
+layout(location = 6) in uint inTriangleId;
 
 layout(location = 0) out vec3 fragColor;
 layout(location = 1) out vec3 fragWorldPos;
@@ -37,6 +38,7 @@ layout(location = 3) out vec2 fragTexCoord;
 layout(location = 4) out vec3 fragLightPos_tangent;
 layout(location = 5) out vec3 fragViewPos_tangent;
 layout(location = 6) out vec3 fragPos_tangent;
+layout(location = 7) out uint fragTriangleId;
 
 vec3 VertexShading()
 {
@@ -73,7 +75,7 @@ void main() {
     fragTexCoord = inTexCoord;
     fragWorldPos = (ubo.model * vec4(inPosition, 1.0)).xyz;
     fragWorldNormal = normalize(mat3(transpose(inverse(ubo.model))) * inNormal);
-
+    fragTriangleId = inTriangleId;
     
     if (pushConstants.isVertexShaded)
     {

@@ -12,6 +12,7 @@ private:
 	std::vector<glm::vec2> texCoords = {};
 	std::vector<glm::vec3> tangents = {};
 	std::vector<glm::vec3> binormals = {};
+	std::vector<unsigned int> triangleIds = {};
 	IndicesVector vertexIndices = {};
 	IndicesVector normalIndices = {};
 	IndicesVector texCoordIndices = {};
