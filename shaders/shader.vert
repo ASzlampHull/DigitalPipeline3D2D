@@ -38,7 +38,8 @@ layout(location = 3) out vec2 fragTexCoord;
 layout(location = 4) out vec3 fragLightPos_tangent;
 layout(location = 5) out vec3 fragViewPos_tangent;
 layout(location = 6) out vec3 fragPos_tangent;
-layout(location = 7) out uint fragTriangleId;
+layout(location = 7) flat out uint fragTriangleId;
+layout(location = 8) out float fragDotProduct; // Output the dot product for feature detection with the normals and view direction
 
 vec3 VertexShading()
 {
@@ -76,6 +77,9 @@ void main() {
     fragWorldPos = (ubo.model * vec4(inPosition, 1.0)).xyz;
     fragWorldNormal = normalize(mat3(transpose(inverse(ubo.model))) * inNormal);
     fragTriangleId = inTriangleId;
+    vec3 viewDir = normalize(ubo.eyePos - fragWorldPos);
+    fragDotProduct = dot(fragWorldNormal, viewDir);
+
     
     if (pushConstants.isVertexShaded)
     {

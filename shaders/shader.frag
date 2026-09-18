@@ -30,7 +30,16 @@ layout(location = 3) in vec2 fragTexCoord;
 layout(location = 4) in vec3 fragLightPos_tangent;
 layout(location = 5) in vec3 fragViewPos_tangent;
 layout(location = 6) in vec3 fragPos_tangent;
-layout(location = 7) in uint fragTriangleId;
+layout(location = 7) flat in uint fragTriangleId;
+layout(location = 8) in float fragDotProduct;
+// Input structure for feature segments
+struct SegmentOutput {
+    vec3 startPos;
+    vec3 endPos;
+    uint triID;
+    uint edgeType;
+};
+layout(location = 9) flat in SegmentOutput fragSegIn;
 
 layout(location = 0) out vec4 outColor;
 
@@ -202,12 +211,25 @@ void TextureCelShading()
     outColor = vec4(finalColor, 1.0);
 }
 
-void main() {           
+void PackingData()
+{
+    // Store segment data in render target for CPU readback
+    // Pack triangle ID and edge type into color channels
+    // This is NOT a visual representation of the model
+    outColor = vec4(
+        float(fragSegIn.triID & 0xFF) / 255.0,
+        float((fragSegIn.triID >> 8) & 0xFF) / 255.0,
+        float((fragSegIn.triID >> 16) & 0xFF) / 255.0,
+        float(fragSegIn.edgeType) / 3.0
+    );
+}
+
+void main() {
     //DefaultTextureMethod();
     //TwoBandCelShading();
     //ThreeBandCelShading();
     //LerpCelShading();
     //FourBandCelShading();
-    TextureCelShading();
-    
+    //TextureCelShading();
+    PackingData();    
 }
