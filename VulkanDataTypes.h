@@ -200,6 +200,19 @@ struct UniformVulkan {
 	std::vector<VkBuffer> uniformBuffers = {};
 	std::vector<VkDeviceMemory> uniformBuffersMemory = {};
 	std::vector<void*> uniformBuffersMapped = {};
+	
+	UniformVulkan() = default;
+	~UniformVulkan() = default;
+	UniformVulkan(const UniformVulkan& other) = default;
+	UniformVulkan& operator=(const UniformVulkan& rhs)
+	{
+		if (this != &rhs) {
+			this->uniformBuffers = rhs.uniformBuffers;
+			this->uniformBuffersMemory = rhs.uniformBuffersMemory;
+			this->uniformBuffersMapped = rhs.uniformBuffersMapped;
+		}
+		return *this;
+	}
 };
 
 struct ModelBuffersVulkan {

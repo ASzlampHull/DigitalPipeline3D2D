@@ -14,6 +14,7 @@
 #include <chrono>
 #include <array>
 #include <GLFW/glfw3.h>
+#include "FeatureReadback.h"
 
 
 class Renderer final {
@@ -46,12 +47,17 @@ private:
 	// Compute resources
 	SSBOBuffer ssboBuffer;
 
+	// Pipeline Feature resources
+	FeatureReadback featureReadback;
+
+
     uint32_t currentFrame = 0;
     float deltaTime = 0.0f;
     float timeAccumulator = 0.0f;
 
 	void InitVulkan();
 	void InitIMGUI();
+	void InitFeatureReadback();
 	void CreateUniformBuffers();
 	void RecreateSwapChain();
 	void CleanupSwapChain();
@@ -91,6 +97,7 @@ public:
             deltaTime = other.deltaTime;
             timeAccumulator = other.timeAccumulator;
 			ssboBuffer = other.ssboBuffer;
+			featureReadback = other.featureReadback;
         }
         return *this;
     }

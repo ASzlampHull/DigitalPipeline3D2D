@@ -136,6 +136,9 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ConfigLoader.cpp" />
+    <ClCompile Include="DepthBufferReader.cpp" />
+    <ClCompile Include="FeatureReadback.cpp" />
+    <ClCompile Include="FeatureSegmentValidator.cpp" />
     <ClCompile Include="HelloTriangleApplication.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="IMGUIManager.cpp" />
@@ -153,8 +156,14 @@
     <ClCompile Include="MTLParser.cpp" />
     <ClCompile Include="OBJParser.cpp" />
     <ClCompile Include="ParserBase.cpp" />
+    <ClCompile Include="PixelDecoder.cpp" />
+    <ClCompile Include="PixelSegmentMerger.cpp" />
+    <ClCompile Include="ReadbackBufferManager.cpp" />
+    <ClCompile Include="ReadbackImageTarget.cpp" />
+    <ClCompile Include="ReadbackSynchronizer.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="SegmentDeduplicator.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="SSBOBuffer.cpp" />
@@ -170,6 +179,7 @@
     <ClCompile Include="VulkanSwapChain.cpp" />
     <ClCompile Include="VulkanTexture.cpp" />
     <ClCompile Include="WindowManager.cpp" />
+    <ClCompile Include="WorldPositionReconstructor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="shaders\shader.comp">
@@ -204,6 +214,10 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ConfigDataTypes.h" />
     <ClInclude Include="ConfigLoader.h" />
+    <ClInclude Include="DepthBufferReader.h" />
+    <ClInclude Include="FeatureReadback.h" />
+    <ClInclude Include="FeatureReadbackTypes.h" />
+    <ClInclude Include="FeatureSegmentValidator.h" />
     <ClInclude Include="HelloTriangleApplication.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
@@ -214,6 +228,12 @@
     <ClInclude Include="imstb_rectpack.h" />
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
+    <ClInclude Include="PixelDecoder.h" />
+    <ClInclude Include="PixelSegmentMerger.h" />
+    <ClInclude Include="ReadbackBufferManager.h" />
+    <ClInclude Include="ReadbackImageTarget.h" />
+    <ClInclude Include="ReadbackSynchroniser.h" />
+    <ClInclude Include="SegmentDeduplicator.h" />
     <ClInclude Include="SSBOBuffer.h" />
     <ClInclude Include="VulkanBuffers.h" />
     <ClInclude Include="VulkanCommandBuffers.h" />
@@ -241,6 +261,7 @@
     <ClInclude Include="VulkanSwapChain.h" />
     <ClInclude Include="VulkanTexture.h" />
     <ClInclude Include="WindowManager.h" />
+    <ClInclude Include="WorldPositionReconstructor.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="shaders\particleFrag.frag">

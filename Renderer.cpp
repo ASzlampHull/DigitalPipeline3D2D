@@ -38,6 +38,37 @@ void Renderer::InitIMGUI()
 		commandBuffersVulkan);
 }
 
+void Renderer::InitFeatureReadback()
+{
+	FeatureReadback::Config readbackConfig;
+	readbackConfig.width = swapChainVulkan->swapChainExtent.width;
+	readbackConfig.height = swapChainVulkan->swapChainExtent.height;
+	readbackConfig.colourFormat = swapChainVulkan->swapChainImageFormat;
+	readbackConfig.frameCount = MAX_FRAMES_IN_FLIGHT;
+    
+	featureReadback.Create(coreVulkan, VK_QUEUE_FAMILY_IGNORED, readbackConfig);
+
+    std::vector<glm::vec3> vertices = {};
+	IndicesVector vertexIndices = {};
+	unsigned int vertexIndexCount = 0;
+    for (const auto& pair : resourceManager.GetModels()) {
+        const auto& model = pair.second;
+        const auto& mesh = model.GetMesh();
+
+		IndicesVector indices = mesh.GetVertexIndices();
+        for (int i = 0; i < indices.size(); i++) {
+			indices[i] += vertexIndexCount;
+        }
+        
+        vertices.insert(vertices.end(), mesh.GetVertices().begin(), mesh.GetVertices().end());
+		vertexIndices.insert(vertexIndices.end(), indices.begin(), indices.end());
+        
+		vertexIndexCount += static_cast<unsigned int>(mesh.GetVertices().size());
+    }
+
+    featureReadback.SetTriangleData(vertices, vertexIndices);
+}
+
 void Renderer::CreateUniformBuffers()
 {
     const VkDeviceSize bufferSize = sizeof(UniformBufferObject);
@@ -89,6 +120,7 @@ void Renderer::Cleanup()
         vkFreeMemory(coreVulkan->device, uniformBufferObject.uniformBuffersMemory[i], nullptr);
     }
 	ssboBuffer.CleanUp();
+	featureReadback.CleanUp();
 	resourceManager.CleanupTextures(coreVulkan);
     vulkanPipeline.CleanupDescriptorSetLayout();
     resourceManager.CleanupBuffersVI();
@@ -108,6 +140,12 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
     if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
         throw std::runtime_error("failed to begin recording command buffer!");
     }
+
+    // Pipeline Feature Readback        
+    // 1. Transition render target for rendering
+    glm::mat4 proj = glm::perspective(glm::radians(45.0f), swapChainVulkan->swapChainExtent.width / static_cast<float>(swapChainVulkan->swapChainExtent.height), 0.1f, 2000.0f);
+    featureReadback.SetCamera(currentCamera.viewMatrix, proj, currentCamera.eyePosition);
+    featureReadback.GetRenderTarget().TransitionForRendering(commandBuffer);
 
 #pragma region Main Render Pass
 
@@ -173,6 +211,13 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
 		//vkCmdSetStencilReference(commandBuffer, VK_STENCIL_FACE_FRONT_AND_BACK, 1); // Stencil reference value for the model
         vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
 
+        /*
+        // Pipeline Feature Readback
+        // 2. Run geometry-shader feature extraction pass
+        //    (bind pipeline, descriptors, draw triangles)
+        //recordFeatureExtractionPass(commandBuffer, featureReadback.GetRenderTarget());        
+        */
+
         vertexCount += static_cast<uint32_t>(mesh.GetVertices().size());
     }
 
@@ -227,15 +272,34 @@ void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
 
 #pragma endregion
 
-#pragma region Compute Pass
-
-    //ComputePass(commandBuffer);
-
-#pragma endregion
+    // Pipeline Feature Readback 
+    // 3. Record readback commands
+    featureReadback.RecordReadback(commandBuffer, currentFrame);
 
     if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
         throw std::runtime_error("failed to record command buffer!");
     }
+
+	// 4. Submit readback commands and wait for completion
+	featureReadback.SubmitReadback(coreVulkan->graphicsQueue, commandBuffer, currentFrame);
+
+    // 4. Extract feature segments (blocks until GPU done)
+    // Lookup functions
+    /*auto triangleNormalLookup = [&](uint32_t triID) {
+        IndicesVector indices = featureReadback.GetMerger().GetTriangleIndices();
+        uint32_t i0 = indices[triID * 3 + 0];
+        uint32_t i1 = indices[triID * 3 + 1];
+        uint32_t i2 = indices[triID * 3 + 2];
+        std::vector<glm::vec3> vertices = featureReadback.GetMerger().GetTriangleVertices();
+        glm::vec3 e1 = vertices[i1] - vertices[i0];
+        glm::vec3 e2 = vertices[i2] - vertices[i0];
+        return glm::normalize(glm::cross(e1, e2));
+        };
+    std::vector<FeatureSegment> segments = featureReadback.ExtractSegments(currentFrame, triangleNormalLookup, glm::vec3(0.8f, 0.7f, 0.6f));*/
+    // 5. Pass to next stage: linkSegmentsIntoPaths(segments)
+    //std::vector<FeaturePath> paths = linkSegmentsIntoPaths(segments);
+
+
 }
 
 void Renderer::ComputePass(VkCommandBuffer commandBuffer)
@@ -373,6 +437,7 @@ void Renderer::InitRenderer(const ConfigData& configData, GLFWwindow* window_, c
     resourceManager = ResourceManager(configData);
     InitVulkan();
 	InitIMGUI();
+    InitFeatureReadback();
 }
 
 void Renderer::Update(const InputManager& input, const CameraSettings& currentCamera_, float deltaTime_, const bool* framebufferResized_)

@@ -165,6 +165,36 @@
     <ClCompile Include="SSBOBuffer.cpp">
       <Filter>Source Files\PipelineTools</Filter>
     </ClCompile>
+    <ClCompile Include="FeatureReadback.cpp">
+      <Filter>Source Files\PipelineTools</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadbackImageTarget.cpp">
+      <Filter>Source Files\PipelineTools</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadbackBufferManager.cpp">
+      <Filter>Source Files\PipelineTools</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthBufferReader.cpp">
+      <Filter>Source Files\PipelineTools</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelDecoder.cpp">
+      <Filter>Source Files\PipelineTools</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldPositionReconstructor.cpp">
+      <Filter>Source Files\PipelineTools</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelSegmentMerger.cpp">
+      <Filter>Source Files\PipelineTools</Filter>
+    </ClCompile>
+    <ClCompile Include="SegmentDeduplicator.cpp">
+      <Filter>Source Files\PipelineTools</Filter>
+    </ClCompile>
+    <ClCompile Include="FeatureSegmentValidator.cpp">
+      <Filter>Source Files\PipelineTools</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadbackSynchronizer.cpp">
+      <Filter>Source Files\PipelineTools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="shaders\shader.comp">
@@ -311,6 +341,39 @@
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="SSBOBuffer.h">
+      <Filter>Header Files\PipelineTools</Filter>
+    </ClInclude>
+    <ClInclude Include="FeatureReadback.h">
+      <Filter>Header Files\PipelineTools</Filter>
+    </ClInclude>
+    <ClInclude Include="FeatureReadbackTypes.h">
+      <Filter>Header Files\PipelineTools</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadbackImageTarget.h">
+      <Filter>Header Files\PipelineTools</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadbackBufferManager.h">
+      <Filter>Header Files\PipelineTools</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthBufferReader.h">
+      <Filter>Header Files\PipelineTools</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelDecoder.h">
+      <Filter>Header Files\PipelineTools</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldPositionReconstructor.h">
+      <Filter>Header Files\PipelineTools</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelSegmentMerger.h">
+      <Filter>Header Files\PipelineTools</Filter>
+    </ClInclude>
+    <ClInclude Include="SegmentDeduplicator.h">
+      <Filter>Header Files\PipelineTools</Filter>
+    </ClInclude>
+    <ClInclude Include="FeatureSegmentValidator.h">
+      <Filter>Header Files\PipelineTools</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadbackSynchroniser.h">
       <Filter>Header Files\PipelineTools</Filter>
     </ClInclude>
   </ItemGroup>
